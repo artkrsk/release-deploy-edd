@@ -1,0 +1,14 @@
+{
+  "*.php": [
+    "vendor/bin/phpcbf --standard=.phpstan/phpcs.xml",
+    "vendor/bin/phpcs --standard=.phpstan/phpcs.xml"
+  ],
+  "*.{ts,tsx}": [
+    "prettier --write",
+    "eslint --fix"
+  ],
+  "*.{json,md,yml,yaml}": [
+    "prettier --write"
+  ]
+}
+

@@ -1,0 +1,61 @@
+// Upgrade to Pro CTA Styles
+
+// Plugin action link on plugins page
+.release-deploy-edd-upgrade-link
+	font-weight: 600 !important
+	color: var(--edd-gh-pro-accent) !important
+	text-decoration: none !important
+
+	&:hover
+		color: color-mix(in srgb, var(--edd-gh-pro-accent) 85%, black) !important
+		text-decoration: none !important
+
+// Settings page upgrade section
+.release-deploy-edd-upgrade-pro
+	max-width: 760px // 800px - 40px side paddings
+	background: color-mix(in srgb, var(--edd-gh-pro-accent) 5%, white)
+	padding: 20px
+	border: 1px solid color-mix(in srgb, var(--edd-gh-pro-accent) 30%, white)
+	border-radius: var(--edd-gh-radius-medium)
+
+	&__title
+		margin-top: 0
+		color: var(--edd-gh-text-primary)
+		font-size: var(--edd-gh-font-size-heading)
+		display: inline-flex
+		align-items: center
+		gap: 0.3em
+
+		.dashicons
+			font-size: 1em
+			width: 1em
+			height: 1em
+			color: goldenrod
+
+	&__description
+		color: var(--edd-gh-text-body)
+		margin-bottom: 15px
+
+	&__features
+		list-style: disc
+		margin-left: 20px
+		margin-bottom: 20px
+
+		li
+			margin-bottom: 8px
+			color: var(--edd-gh-text-body)
+
+	&__button
+		margin-top: 10px
+
+		.button-primary
+			background: var(--edd-gh-pro-accent) !important
+			border-color: var(--edd-gh-pro-accent) !important
+			font-size: var(--edd-gh-font-size-large) !important
+			padding: 8px 20px !important
+			height: auto !important
+			line-height: 1.4 !important
+
+			&:hover, &:focus
+				background: color-mix(in srgb, var(--edd-gh-pro-accent) 85%, black) !important
+				border-color: color-mix(in srgb, var(--edd-gh-pro-accent) 85%, black) !important

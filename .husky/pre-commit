@@ -1,0 +1,3 @@
+#!/bin/sh
+
+composer phpcbf && composer phpcs && composer phpstan && npx tsc --noEmit

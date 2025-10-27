@@ -1,0 +1,62 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  detect-config:
+    name: Load Plugin Configuration
+    runs-on: ubuntu-latest
+    outputs:
+      plugin_slug: ${{ steps.config.outputs.plugin_slug }}
+      main_file: ${{ steps.config.outputs.main_file }}
+      zip_path: ${{ steps.config.outputs.zip_path }}
+      assets_dir: ${{ steps.config.outputs.assets_dir }}
+      node_version: ${{ steps.config.outputs.node_version }}
+      build_command: ${{ steps.config.outputs.build_command }}
+      deploy_wordpress: ${{ steps.config.outputs.deploy_wordpress }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract config
+        id: config
+        run: |
+          echo "plugin_slug=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.plugin.slug))")" >> $GITHUB_OUTPUT
+          echo "main_file=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.plugin.mainFile))")" >> $GITHUB_OUTPUT
+          echo "zip_path=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.plugin.zipFile))")" >> $GITHUB_OUTPUT
+          echo "assets_dir=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.plugin.assetsDirectory))")" >> $GITHUB_OUTPUT
+          echo "node_version=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.github.nodeVersion))")" >> $GITHUB_OUTPUT
+          echo "build_command=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.github.buildCommand))")" >> $GITHUB_OUTPUT
+          echo "deploy_wordpress=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.github.deployToWordPress))")" >> $GITHUB_OUTPUT
+
+  release:
+    needs: detect-config
+    permissions:
+      contents: write
+      pull-requests: read
+    uses: artkrsk/wordpress-plugin-release-action/.github/workflows/release.yml@main
+    with:
+      # Plugin identification (from config)
+      main_plugin_file: ${{ needs.detect-config.outputs.main_file }}
+      plugin_slug: ${{ needs.detect-config.outputs.plugin_slug }}
+
+      # Build configuration (from config)
+      node_version: ${{ needs.detect-config.outputs.node_version }}
+      build_command: ${{ needs.detect-config.outputs.build_command }}
+
+      # Validation
+      test_command: 'pnpm run validate'
+
+      # Paths (from config)
+      zip_path: ${{ needs.detect-config.outputs.zip_path }}
+      assets_directory: ${{ needs.detect-config.outputs.assets_dir }}
+
+      # WordPress.org deployment (from config)
+      deploy_to_wordpress: ${{ needs.detect-config.outputs.deploy_wordpress == 'true' }}
+
+      # Version validation
+      version_files: '["plugin_header", "readme.txt", "package.json"]'
+
+    secrets: inherit

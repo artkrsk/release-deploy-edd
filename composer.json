@@ -1,0 +1,48 @@
+{
+  "name": "arts/release-deploy-edd",
+  "description": "Lite version - Serve EDD downloads directly from GitHub releases",
+  "type": "library",
+  "minimum-stability": "dev",
+  "repositories": [],
+  "authors": [
+    {
+      "name": "Artem Semkin",
+      "email": "me@artemsemkin.com",
+      "homepage": "https://artemsemkin.com"
+    }
+  ],
+  "homepage": "https://artemsemkin.com",
+  "wordpress": {
+    "Plugin Name": "Release Deploy for Easy Digital Downloads",
+    "Plugin URI": "https://artemsemkin.gumroad.com/l/release-deploy-edd-pro",
+    "Description": "Automate your EDD workflow. Push a tag, create a GitHub release, and files are instantly available—supports private repos, no local storage.",
+    "Text Domain": "release-deploy-edd",
+    "License": "GPL-3.0-or-later",
+    "License URI": "https://www.gnu.org/licenses/gpl-3.0",
+    "Requires at least": "6.0",
+    "Tested up to": "6.8",
+    "Requires PHP": "7.4",
+    "Requires Plugins": "easy-digital-downloads"
+  },
+  "autoload": {
+    "psr-4": {
+      "Arts\\EDD\\ReleaseDeploy\\": "src/php/"
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "arts/base": "@dev",
+    "arts/utilities": "@dev",
+    "arts/github-release-browser": "@dev"
+  },
+    "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "phpstan": "/opt/homebrew/opt/php@8.3/bin/php ~/.composer/vendor/bin/phpstan analyse --memory-limit=1G --no-progress",
+    "phpcs": "~/.composer/vendor/bin/phpcs --standard=.phpstan/phpcs.xml",
+    "phpcbf": "~/.composer/vendor/bin/phpcbf --standard=.phpstan/phpcs.xml"
+  }
+}

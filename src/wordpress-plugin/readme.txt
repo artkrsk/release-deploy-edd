@@ -67,6 +67,8 @@ Your token is stored securely on your server and never leaves your WordPress ins
 
 Instead of uploading ZIP files to WordPress, you store them as GitHub release assets. The plugin serves files directly from GitHub to your customers—no local storage needed.
 
+This eliminates bandwidth costs and storage limitations of your hosting since files serve from reliable GitHub's CDN.
+
 You can create releases manually on GitHub.com or automate the process with CI/CD pipelines. The plugin works with both workflows.
 
 = Can I use private repositories? =

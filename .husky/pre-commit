@@ -1,3 +1,12 @@
 #!/bin/sh
 
+# Prevent direct commits to main branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$current_branch" = "main" ]; then
+    echo "❌ Cannot commit directly to main branch."
+    echo "Please work on develop or create a feature branch and merge via pull request."
+    exit 1
+fi
+
+# Run existing checks
 composer phpcbf && composer phpcs && composer phpstan && npx tsc --noEmit

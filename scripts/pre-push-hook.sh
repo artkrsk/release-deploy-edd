@@ -74,16 +74,16 @@ do
     
     # 3. Run static analysis (PHPStan)
     echo "🔍 Running PHP static analysis..."
-    pnpm run phpstan || {
+    composer run phpstan || {
       echo "❌ PHPStan found issues"
       exit 1
     }
     echo "✅ Static analysis passed"
     echo ""
-    
+
     # 4. Run PHPCS (coding standards)
     echo "🔍 Running PHP coding standards check..."
-    pnpm run phpcs || {
+    composer run phpcs || {
       echo "❌ PHPCS found issues"
       exit 1
     }

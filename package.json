@@ -1,7 +1,7 @@
 {
   "name": "@arts/release-deploy-edd",
   "author": "Artem Semkin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "license": "GPL-3.0-or-later",
   "description": "Lite version - Serve EDD downloads directly from GitHub releases",

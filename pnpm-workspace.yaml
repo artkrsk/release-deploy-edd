@@ -1,3 +1,6 @@
+packages:
+  - '__build__'
+
 allowBuilds:
   '@arts/github-release-browser': true
   '@arts/release-deploy-core': true

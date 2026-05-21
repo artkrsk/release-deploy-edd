@@ -6,12 +6,12 @@
  * Author URI: https://artemsemkin.com
  * Plugin URI: https://artemsemkin.gumroad.com/l/release-deploy-edd-pro
  * Text Domain: release-deploy-edd
- * Version: 1.0.1
+ * Version: 1.0.2
  * License: GPL-3.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-3.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
- * Tested up to: 6.9
+ * Tested up to: 7.0
  * Requires Plugins: easy-digital-downloads
  */
 

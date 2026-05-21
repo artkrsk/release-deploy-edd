@@ -2,9 +2,9 @@
 Contributors:       artemsemkin
 Tags:               easy-digital-downloads, github, workflow, webhook, automation
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 license: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0
 
@@ -137,6 +137,9 @@ Your GitHub Personal Access Token is stored securely on your WordPress server an
 Initial public release.
 
 == Changelog ==
+
+= 1.0.2 =
+* improved: full compatibility with WordPress 7.0
 
 = 1.0.0 =
 * Initial public release.

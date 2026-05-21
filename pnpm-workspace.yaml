@@ -2,5 +2,6 @@ allowBuilds:
   '@arts/github-release-browser': true
   '@arts/release-deploy-core': true
   '@parcel/watcher': true
+  cypress: true
   esbuild: true
   fs-ext-extra-prebuilt: true

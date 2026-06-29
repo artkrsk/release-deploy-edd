@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Provides dynamic property access to services with type safety.
  * Implements IteratorAggregate to support foreach iteration.
  *
- * @property \Arts\GH\ReleaseBrowser\Core\Services\GitHubAPI $github_api
+ * @property \Arts\GH\ReleaseBrowser\Core\Interfaces\IPlatformAPI $github_api
  * @property \Arts\GH\ReleaseBrowser\Core\Services\URIParser $uri_parser
  * @property \Arts\GH\ReleaseBrowser\Core\Services\AssetResolver $asset_resolver
  *

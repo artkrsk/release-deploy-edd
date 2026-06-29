@@ -17,7 +17,8 @@ export default {
       'release-deploy-edd.php',
       'readme.txt',
       'src/php/libraries/release-deploy-edd/index.umd.js',
-      'src/php/libraries/release-deploy-edd/index.css'
+      'src/php/libraries/release-deploy-edd/index.css',
+      'vendor/arts/github-release-browser/src/php/libraries/github-release-browser/index.umd.js'
     ]
   },
   github: {

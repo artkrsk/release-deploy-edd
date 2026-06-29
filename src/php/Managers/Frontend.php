@@ -22,21 +22,6 @@ class Frontend extends Manager {
 		$this->enqueue_settings_scripts( $hook_suffix );
 		$this->enqueue_metabox_scripts( $hook_suffix );
 		$this->enqueue_plugins_page_styles( $hook_suffix );
-		$this->enqueue_browser_scripts( $hook_suffix );
-	}
-
-	/**
-	 * Enqueue browser scripts for media library iframe
-	 *
-	 * @param string $hook_suffix Current WordPress admin page hook.
-	 */
-	private function enqueue_browser_scripts( $hook_suffix ) {
-		// Check if we're in the media upload iframe
-		if ( defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
-			// Package browser assets are auto-enqueued by the Browser's Frontend class
-			// Enqueue plugin-specific scripts for browser context
-			$this->enqueue_common_scripts( array( 'browser' ) );
-		}
 	}
 
 	/**

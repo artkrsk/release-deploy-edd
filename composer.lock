@@ -53,23 +53,29 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/github-release-browser.git",
-                "reference": "9efe9d2e0333de6e5800f98e93aa5e111238e37d"
+                "reference": "a578a2eaf84913dbe5ee4f8f2f0039817939a493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/9efe9d2e0333de6e5800f98e93aa5e111238e37d",
-                "reference": "9efe9d2e0333de6e5800f98e93aa5e111238e37d",
+                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/a578a2eaf84913dbe5ee4f8f2f0039817939a493",
+                "reference": "a578a2eaf84913dbe5ee4f8f2f0039817939a493",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0"
+                "php": ">=8.0"
             },
             "require-dev": {
+                "brain/monkey": "^2.6",
+                "captainhook/captainhook": "^5.23",
                 "dealerdirect/phpcodesniffer-composer-installer": "^1.1.2",
+                "ergebnis/composer-normalize": "^2.44",
+                "mockery/mockery": "^1.6",
                 "phpstan/phpstan": "2.1.x-dev",
+                "phpunit/phpunit": "^9.6",
                 "squizlabs/php_codesniffer": "3.x-dev",
                 "szepeviktor/phpstan-wordpress": "2.x-dev",
-                "wp-coding-standards/wpcs": "^3.0"
+                "wp-coding-standards/wpcs": "^3.0",
+                "yoast/phpunit-polyfills": "^2.0"
             },
             "default-branch": true,
             "type": "library",
@@ -87,7 +93,7 @@
                 "issues": "https://github.com/artkrsk/github-release-browser/issues",
                 "source": "https://github.com/artkrsk/github-release-browser/tree/main"
             },
-            "time": "2025-11-05T02:48:34+00:00"
+            "time": "2026-06-28T21:52:10+00:00"
         },
         {
             "name": "arts/utilities",

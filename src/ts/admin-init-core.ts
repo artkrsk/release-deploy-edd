@@ -10,65 +10,21 @@ import {
   initVersionSync,
   initChangelogSync
 } from '@arts/release-deploy-core'
-import type { ISelectedAsset } from '@arts/github-release-browser'
+import { initEDDMediaBrowser } from './media/edd-media-browser'
 
 export function initCore() {
   if (typeof wp === 'undefined' || !wp.element) {
     return
   }
 
+  // Bridge the GitHub release browser into EDD's media modal as a Backbone menu
+  // item (robust inside EDD's pruned wp.media frame; replaces the classic tab).
+  initEDDMediaBrowser()
+
   // Token settings (always available)
   const settingsRoot = document.getElementById('release-deploy-edd-settings-root')
   if (settingsRoot) {
     wp.element.render(wp.element.createElement(SettingsApp), settingsRoot)
-  }
-
-  // File browser (shows Pro badges for locked features)
-  const browserRoot = document.getElementById('github-release-browser-root')
-  if (browserRoot) {
-    // Package Browser - loaded from window.ArtsGitHubReleaseBrowser global
-    const BrowserApp = window.ArtsGitHubReleaseBrowser
-
-    if (!BrowserApp) {
-      console.error('BrowserApp not found. Package script may not be loaded.')
-      return
-    }
-
-    wp.element.render(
-      wp.element.createElement(BrowserApp, {
-        config: {
-          apiUrl: window.releaseDeployEDD.ajaxUrl,
-          nonce: window.releaseDeployEDD.contexts.browser?.nonce || '',
-          actionPrefix: 'edd_release_deploy',
-          protocol: 'edd-release-deploy://',
-          onSelectAsset: (asset: ISelectedAsset) => {
-            const parent = window.parent as Window & { formfield?: JQuery; tb_remove?: () => void }
-            if (parent && parent.formfield) {
-              // Build custom protocol URL
-              const fileUrl = `edd-release-deploy://${asset.repo}/${asset.release}/${asset.asset.name}`
-
-              // Update EDD formfields
-              parent.formfield.find(EDD_SELECTORS.UPLOAD_FIELD).val(fileUrl).trigger('change')
-              parent.formfield
-                .find(EDD_SELECTORS.NAME_FIELD)
-                .val(asset.asset.name)
-                .trigger('change')
-
-              // Close modal
-              if (typeof parent.tb_remove === 'function') {
-                parent.tb_remove()
-              }
-            }
-          },
-          features: window.releaseDeployEDD.features,
-          upgradeUrl: window.releaseDeployEDD.purchaseUrl,
-          strings: {
-            // Optional: Override default strings with EDD-specific ones
-          }
-        }
-      }),
-      browserRoot
-    )
   }
 
   // Inject sync UI if on metabox page (only if Software Licensing is enabled)

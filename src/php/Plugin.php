@@ -181,7 +181,9 @@ class Plugin extends BasePlugin {
 			)
 		);
 
-		$this->package_browser->register_modal_integration();
+		// The browser is bridged into EDD's wp.media modal as a Backbone menu item
+		// via JS (src/ts/media/edd-media-browser.ts), which is robust inside EDD's
+		// pruned media frame. The legacy classic media_upload_tabs tab is not used.
 
 		return $this;
 	}

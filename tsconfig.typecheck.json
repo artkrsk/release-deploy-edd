@@ -1,0 +1,9 @@
+{
+  // Type-check only config for the pre-commit hook. noEmit lives HERE, never in
+  // tsconfig.json — ts-loader consumes tsconfig.json to build, and noEmit there
+  // would silently produce an empty bundle.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  }
+}

@@ -23,8 +23,9 @@ export default {
   },
   github: {
     nodeVersion: '23',
+    phpVersion: '8.0',
     buildCommand:
-      'corepack enable && cd __build__ && pnpm install && cd .. && pnpm install --ignore-scripts=false && composer install --no-dev && pnpm run build',
+      'corepack enable && pnpm install --ignore-scripts=false && composer install --no-dev && pnpm run build',
     deployToWordPress: true
   }
 }

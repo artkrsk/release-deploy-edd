@@ -15,6 +15,7 @@ jobs:
       zip_path: ${{ steps.config.outputs.zip_path }}
       assets_dir: ${{ steps.config.outputs.assets_dir }}
       node_version: ${{ steps.config.outputs.node_version }}
+      php_version: ${{ steps.config.outputs.php_version }}
       build_command: ${{ steps.config.outputs.build_command }}
       deploy_wordpress: ${{ steps.config.outputs.deploy_wordpress }}
     steps:
@@ -28,6 +29,7 @@ jobs:
           echo "zip_path=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.plugin.zipFile))")" >> $GITHUB_OUTPUT
           echo "assets_dir=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.plugin.assetsDirectory))")" >> $GITHUB_OUTPUT
           echo "node_version=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.github.nodeVersion))")" >> $GITHUB_OUTPUT
+          echo "php_version=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.github.phpVersion))")" >> $GITHUB_OUTPUT
           echo "build_command=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.github.buildCommand))")" >> $GITHUB_OUTPUT
           echo "deploy_wordpress=$(node --input-type=module -e "import('./release.config.js').then(m => console.log(m.default.github.deployToWordPress))")" >> $GITHUB_OUTPUT
 
@@ -36,7 +38,10 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-    uses: artkrsk/wordpress-plugin-release-action/.github/workflows/release.yml@main
+    # Pinned to a SHA so an upstream push can't change the release behavior of both
+    # callers at once. deploy_to_wordpress is config-driven (true for Lite, so the
+    # WordPress.org SVN deploy step runs).
+    uses: artkrsk/wordpress-plugin-release-action/.github/workflows/release.yml@b5a5b09de98a8c3e8fcbcc75a290da3eda232d94
     with:
       # Plugin identification (from config)
       main_plugin_file: ${{ needs.detect-config.outputs.main_file }}
@@ -44,6 +49,7 @@ jobs:
 
       # Build configuration (from config)
       node_version: ${{ needs.detect-config.outputs.node_version }}
+      php_version: ${{ needs.detect-config.outputs.php_version }}
       build_command: ${{ needs.detect-config.outputs.build_command }}
 
       # Validation
@@ -53,8 +59,11 @@ jobs:
       zip_path: ${{ needs.detect-config.outputs.zip_path }}
       assets_directory: ${{ needs.detect-config.outputs.assets_dir }}
 
-      # WordPress.org deployment (from config)
+      # WordPress.org deployment (from config; true for Lite)
       deploy_to_wordpress: ${{ needs.detect-config.outputs.deploy_wordpress == 'true' }}
+
+      # Rich release notes (history is PR-merge based)
+      generate_release_notes: true
 
       # Version validation
       version_files: '["plugin_header", "readme.txt", "package.json"]'

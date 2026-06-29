@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Load config
 # When run as git hook from .git/hooks/pre-push, we need to go up to project root

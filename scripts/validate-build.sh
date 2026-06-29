@@ -37,18 +37,27 @@ CRITICAL_FILES=$(node -e "
     .then(m => console.log(m.default.validation.criticalFiles.join('\n')))
 ")
 
-# Check critical files
-echo "$CRITICAL_FILES" | while IFS= read -r file; do
+# Check critical files. Use a here-string (not a pipe) so the loop runs in the
+# current shell: a piped `while ... exit 1` runs in a subshell and cannot fail the
+# script, so missing files would otherwise slip through and validation always passed.
+FAILED=0
+while IFS= read -r file; do
+  [ -z "$file" ] && continue
   if [ ! -f "$PLUGIN_DIR/$file" ]; then
     echo "❌ Missing: $file"
-    rm -rf "$TEMP_DIR"
-    exit 1
+    FAILED=1
+  else
+    echo "✓ $file"
   fi
-  echo "✓ $file"
-done
+done <<< "$CRITICAL_FILES"
 
 # Cleanup
 rm -rf "$TEMP_DIR"
+
+if [ "$FAILED" -ne 0 ]; then
+  echo "❌ Build validation failed"
+  exit 1
+fi
 
 echo "✅ Build validation passed"
 

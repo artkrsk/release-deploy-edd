@@ -9,4 +9,4 @@ if [ "$current_branch" = "main" ]; then
 fi
 
 # Run existing checks
-composer phpcbf && composer phpcs && composer phpstan && npx tsc -p tsconfig.typecheck.json
+composer phpcbf && composer phpcs && composer phpstan && npx tsc -p tsconfig.typecheck.json && pnpm run test

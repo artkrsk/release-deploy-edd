@@ -4,7 +4,7 @@ Tags:               easy-digital-downloads, github, workflow, webhook, automatio
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 license: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0
 
@@ -133,10 +133,17 @@ Your GitHub Personal Access Token is stored securely on your WordPress server an
 
 == Upgrade Notice ==
 
+= 1.0.3 =
+Fixes the GitHub release browser failing to open in the Download editor. Recommended update.
+
 = 1.0.0 =
 Initial public release.
 
 == Changelog ==
+
+= 1.0.3 =
+* Fixed: the GitHub release browser could fail to open in the Download file editor; it now mounts reliably in WordPress's media modal.
+* Improved: internal build, release, and test tooling.
 
 = 1.0.2 =
 * improved: full compatibility with WordPress 7.0

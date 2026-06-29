@@ -47,6 +47,13 @@ if [ "$BRANCH" = "main" ]; then
   exit 1
 fi
 
+# Type-check and run unit tests on every commit
+echo "🔍 Running TypeScript type check..."
+npx tsc -p tsconfig.typecheck.json && pnpm run test || {
+  echo "❌ Type check or unit tests failed"
+  exit 1
+}
+
 exit 0
 EOF
 

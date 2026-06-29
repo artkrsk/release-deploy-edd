@@ -73,7 +73,16 @@ do
     echo "✅ Build successful"
     echo ""
     
-    # 3. Run static analysis (PHPStan)
+    # 3. Run unit tests (Vitest)
+    echo "🧪 Running unit tests..."
+    pnpm run test || {
+      echo "❌ Unit tests failed"
+      exit 1
+    }
+    echo "✅ Unit tests passed"
+    echo ""
+
+    # 4. Run static analysis (PHPStan)
     echo "🔍 Running PHP static analysis..."
     composer run phpstan || {
       echo "❌ PHPStan found issues"
@@ -82,7 +91,7 @@ do
     echo "✅ Static analysis passed"
     echo ""
 
-    # 4. Run PHPCS (coding standards)
+    # 5. Run PHPCS (coding standards)
     echo "🔍 Running PHP coding standards check..."
     composer run phpcs || {
       echo "❌ PHPCS found issues"
@@ -91,7 +100,7 @@ do
     echo "✅ Coding standards passed"
     echo ""
     
-    # 5. Validate ZIP structure
+    # 6. Validate ZIP structure
     echo "🔍 Validating ZIP structure..."
     pnpm run validate
     if [ $? -ne 0 ]; then
@@ -100,7 +109,7 @@ do
     fi
     echo ""
     
-    # 6. All checks passed
+    # 7. All checks passed
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "✅ All pre-push checks passed!"
     echo "🚀 Pushing tag $TAG_NAME to trigger release..."

@@ -133,7 +133,6 @@ class Settings extends Manager {
 			wp_send_json_success( array( 'message' => __( 'Connection successful', 'release-deploy-edd' ) ) );
 		}
 
-		/** Test GitHub API connection result @var bool $result */
 		$message = __( 'Connection failed', 'release-deploy-edd' );
 		wp_send_json_error( array( 'message' => $message ) );
 	}

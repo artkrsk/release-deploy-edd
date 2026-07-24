@@ -23,7 +23,7 @@ import { generatePot, watchPhpForTranslations } from '../utils/wordpress/i18n.js
 import { startLiveReloadServer } from '../utils/common/live-reload.js'
 
 /**
- * Main Builder class for the Fluid Design System
+ * Main Builder class
  */
 export class Builder {
   constructor() {

@@ -22,7 +22,7 @@
 
 ### Core Concepts
 
-- **Services Pattern**: Core services only in `src/php/Services/Core/`
+- **Services Pattern**: GitHub API, URI parsing, and asset resolution services come from the `@arts/github-release-browser` package, registered onto the services container in `src/php/Plugin.php` (no local `Services/` directory)
 - **Managers Pattern**: WordPress integration in `src/php/Managers/`
 - **No License Dependency**: Standalone, no ArtsLicensePro dependency
 - **Upgrade CTAs**: Pro feature prompts throughout UI
@@ -72,26 +72,23 @@
 
 ### File Organization
 
-- **PHP Services**: Core services only in `src/php/Services/Core/`
-  - `GitHubAPI.php` - GitHub REST API communication
-  - `URIParser.php` - Parse `edd-release-deploy://` URIs
-  - `AssetResolver.php` - Resolve GitHub release assets
+- **PHP Services**: Provided by the `@arts/github-release-browser` package (no local files) and registered onto the services container in `src/php/Plugin.php`:
+  - `github_api` - GitHub REST API communication (`Arts\GH\ReleaseBrowser\Core\Interfaces\IPlatformAPI`)
+  - `uri_parser` - parses `edd-release-deploy://` URIs (`...\Core\Services\URIParser`)
+  - `asset_resolver` - resolves GitHub release assets (`...\Core\Services\AssetResolver`)
+- **PHP Base**: `src/php/Base/` - plugin/manager base classes plus the typed `ServicesContainer` and `ManagersContainer`
 - **PHP Managers**: WordPress integration in `src/php/Managers/`
-  - `GitHub.php` - GitHub API AJAX handlers
-  - `Downloads.php` - Download file serving
-  - `FileBrowser.php` - Media modal integration
-  - `Frontend.php` - Admin assets enqueuing
-  - `Settings.php` - Settings page management
-  - `Metabox.php` - Download edit screen integration
-- **React Components**: Core components + local ProBadge (no external dependency)
-  - `src/ts/core/browser/` - Release browser UI
-  - `src/ts/core/settings/` - Settings page UI
-  - `src/ts/core/metabox/` - File status indicators
-  - `src/ts/core/components/ProBadge.tsx` - Local ProBadge component
-- **Sass**: Core styles only, upgrade CTA styling
-  - `src/styles/core/components/` - Component styles
-  - `src/styles/core/base/` - Variables and icons
-- **No Pro Directory**: `src/ts/pro/` and `src/styles/pro/` do not exist (Pro features are stubs/badges)
+  - `Downloads.php` - intercepts the `edd_requested_file` filter, serves release assets from GitHub
+  - `Frontend.php` - admin asset enqueuing and localized data
+  - `Settings.php` - EDD settings section, token field, `ajax_test_connection`, plugin action links
+  - `Metabox.php` - file-status indicator root on the Download edit screen
+- **TypeScript**: Core React components (`SettingsApp`, `FileStatus`, `ProBadge`, `VersionSync`, `ChangelogSync`, `EDD_SELECTORS`) come from `@arts/release-deploy-core`; the release browser UI comes from `@arts/github-release-browser`. This repo's `src/ts/` is thin glue:
+  - `admin-init.ts` / `admin-init-core.ts` / `admin-init-free.ts` - admin bootstrap (core init + badge-only Pro features)
+  - `media/edd-media-browser.ts` - bridges the release browser into EDD's `wp.media` modal as a Backbone menu item
+  - `global.d.ts` - window/global type declarations
+- **Sass**: `src/styles/index.sass` → `core/index.sass`, which `@use`s `@arts/release-deploy-core/dist` plus local component styles
+  - `src/styles/core/components/` - `_settings.sass`, `_upgrade-pro.sass`
+- **No Pro Directory**: `src/ts/pro/` and `src/styles/pro/` do not exist (Pro features render upgrade CTAs / badges only)
 
 ## Build System
 
@@ -100,8 +97,8 @@
 ```bash
 pnpm run build     # Production build
 pnpm run dev       # Development watch mode
-pnpm run lint      # Code linting
-pnpm run test      # Run tests
+pnpm run test      # Run unit tests (Vitest)
+pnpm run validate  # Validate the built ZIP structure
 ```
 
 ### Key Files
@@ -114,6 +111,7 @@ pnpm run test      # Run tests
 - **composer.json**: PHP dependencies
   - `arts/base` - Plugin architecture foundation
   - `arts/utilities` - WordPress utility functions
+  - `arts/github-release-browser` - GitHub API services + release browser (provides `github_api` / `uri_parser` / `asset_resolver`)
   - No ArtsLicensePro dependency
 - **package.json**: Node dependencies (React 18.3.1 for WordPress compatibility)
   - Custom build system in `__build__/`
@@ -139,12 +137,7 @@ pnpm run test      # Run tests
 
 ### ProBadge Implementation
 
-- **Local Component**: `src/ts/core/components/ProBadge.tsx` (copied from ArtsLicensePro)
-- **No External Dependency**: Prevents ArtsLicensePro requirement
-- **Styling**: `src/styles/core/components/_pro-badge.sass`
-- **CSS Classes**: `arts-license-pro-badge`, `arts-license-pro-badge-wrapper`
-- **Usage**: Used in VersionSync and ChangelogSync components (stubs that show Pro badges)
-- **Props**: `label`, `icon`, `href`, `text`, `status`, `showWrapper`, `renderAsLink`, `openInNewWindow`
+- **Source**: Pro badges are rendered by the `@arts/release-deploy-core` package's `VersionSync` and `ChangelogSync` components (no local ProBadge component and no ArtsLicensePro dependency)
 
 ## Testing
 
@@ -153,7 +146,7 @@ pnpm run test      # Run tests
 - Run WordPress Plugin Checker (must pass with 0 errors)
 - Verify 5-tag limit in readme.txt (current tags: `easy-digital-downloads, github, workflow, webhook, automation`)
 - Test with EDD 3.0+ on WordPress 6.0+
-- Verify no external dependencies (only `arts/base` and `arts/utilities` which are GPL-3.0-or-later)
+- Verify no external dependencies (only `arts/base`, `arts/utilities`, and `arts/github-release-browser`, all GPL-3.0-or-later)
 - Check proper text domain usage (`release-deploy-edd`)
 - Requires Plugins: `easy-digital-downloads`
 
@@ -162,7 +155,7 @@ pnpm run test      # Run tests
 - Install on clean WordPress → All core features work
 - Configure GitHub token → Connection successful, rate limit displays
 - Add GitHub URIs → File downloads work (`edd-release-deploy://owner/repo/release/file.zip` format)
-- Browse repositories → Media modal works (`media_upload_github_releases` tab)
+- Browse repositories → the "GitHub Releases" item appears in EDD's `wp.media` modal (Backbone menu item, see `src/ts/media/edd-media-browser.ts`)
 - View Pro features → Upgrade CTAs display correctly (Version Sync, Changelog Sync)
 - Test file validation → Status indicators show correctly in Downloads metabox
 - Test EDD Software Licensing integration → Version/Changelog sync badges appear
@@ -189,34 +182,12 @@ pnpm run test      # Run tests
 
 ### Core AJAX Actions
 
-All registered in `Plugin::add_actions()`:
-
-- `edd_release_deploy_test_connection` - Test GitHub token connection
-- `edd_release_deploy_test_file` - Validate file accessibility
-- `edd_release_deploy_get_repos` - Fetch user repositories
-- `edd_release_deploy_get_releases` - Fetch repository releases
-- `edd_release_deploy_clear_cache` - Clear GitHub API cache
-- `edd_release_deploy_get_rate_limit` - Get GitHub API rate limit status
+- `edd_release_deploy_test_connection` → `Settings::ajax_test_connection` — the only AJAX action registered in `Plugin::add_actions()` (tests the GitHub token; capability: `manage_shop_settings`)
+- The release-browser AJAX endpoints (list repos/releases, validate a file, clear cache, rate-limit status) are registered by the `@arts/github-release-browser` package under the `edd_release_deploy` action prefix — not in this repo
 
 ### Pro Feature Stubs
 
-Pro feature AJAX endpoints return "Pro feature" error messages:
-
-```php
-public function ajax_sync_version() {
-    check_ajax_referer('edd_release_deploy_version_sync', 'nonce');
-    if (!current_user_can('edit_products')) {
-        wp_send_json_error(['message' => 'Unauthorized']);
-    }
-    wp_send_json_error(['message' => __('Version sync is a Pro feature', 'release-deploy-edd')]);
-}
-```
-
-Similar stubs exist for:
-
-- `ajax_sync_version()` - Version sync
-- `ajax_sync_changelog()` - Changelog sync
-- `ajax_get_changelog()` - Get changelog from GitHub
+None. Lite has no local Pro-feature AJAX handlers — version/changelog sync is provided by the `@arts/release-deploy-core` components as upgrade badges only.
 
 ## Constants & Configuration
 
@@ -255,12 +226,9 @@ Comprehensive project documentation may be available at: `/Users/art/Projects/me
 
 ### Debugging Missing Features
 
-- Verify service doesn't exist: `!isset($this->services->version_sync)` or `!isset($this->services->webhook)`
-- Check ProBadge renders correctly - inspect React root elements
-- Verify upgrade CTAs display - check Settings page and plugin action links
-- Check purple container styling applied - verify CSS variables load
-- Check AJAX endpoints return Pro feature messages
-- Verify EDD Software Licensing detection: `function_exists('edd_software_licensing')`
+- Pro services (`version_sync`, `webhook`, etc.) are never registered in Lite — `ServicesContainer` only holds `github_api`, `uri_parser`, `asset_resolver`
+- Version/Changelog sync render as upgrade badges only; the metabox sync UI appears only when `function_exists('edd_software_licensing')` (see `Frontend::get_localized_data`)
+- Upgrade CTAs live on the Settings page (`release-deploy-edd-upgrade-pro`) and as a plugin action link (`release-deploy-edd-upgrade-link`)
 
 ### WordPress.org Submission
 

@@ -14,12 +14,6 @@
   "homepage": "https://artemsemkin.com",
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/artkrsk/easy-digital-downloads-stubs"
-    }
-  ],
   "plugin": {
     "Plugin Name": "Release Deploy for Easy Digital Downloads",
     "Plugin URI": "https://artemsemkin.com/plugins/release-deploy-edd/",
@@ -41,7 +35,7 @@
     "arts/github-release-browser": "@dev"
   },
   "require-dev": {
-    "arts/easy-digital-downloads-stubs": "@dev",
+    "arts/easy-digital-downloads-stubs": "^3.7",
     "arts/wp-plugin-standards": "^1.0",
     "brianhenryie/strauss": "^0.28",
     "php-stubs/wp-cli-stubs": "^2.12",

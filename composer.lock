@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "845a3232ff0aaedf24b06dccc76f95da",
+    "content-hash": "a2083572de68e2f21ef6ea9099e56090",
     "packages": [
         {
             "name": "arts/base",
@@ -158,16 +158,16 @@
     "packages-dev": [
         {
             "name": "arts/easy-digital-downloads-stubs",
-            "version": "v3.6.7",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:artkrsk/easy-digital-downloads-stubs.git",
-                "reference": "131c78366d5c5b6f59dbf0d870e9ce66b5910a83"
+                "url": "https://github.com/artkrsk/easy-digital-downloads-stubs.git",
+                "reference": "bdc07b2f0bfd5344192af1337c4e21256fed97d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/easy-digital-downloads-stubs/zipball/131c78366d5c5b6f59dbf0d870e9ce66b5910a83",
-                "reference": "131c78366d5c5b6f59dbf0d870e9ce66b5910a83",
+                "url": "https://api.github.com/repos/artkrsk/easy-digital-downloads-stubs/zipball/bdc07b2f0bfd5344192af1337c4e21256fed97d1",
+                "reference": "bdc07b2f0bfd5344192af1337c4e21256fed97d1",
                 "shasum": ""
             },
             "require": {
@@ -186,40 +186,7 @@
                 "wp-coding-standards/wpcs": "^3.0"
             },
             "type": "library",
-            "scripts": {
-                "post-install-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "post-update-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "changelog": [
-                    "git-cliff --output CHANGELOG.md"
-                ],
-                "generate": [
-                    "@php -d memory_limit=2G generate.php"
-                ],
-                "normalize": [
-                    "composer-normalize"
-                ],
-                "test": [
-                    "@test:phpunit",
-                    "@test:phpstan",
-                    "@test:cs"
-                ],
-                "test:cs": [
-                    "phpcs"
-                ],
-                "test:cs:fix": [
-                    "phpcbf"
-                ],
-                "test:phpstan": [
-                    "phpstan analyze -c tests/phpstan.neon --memory-limit=2G"
-                ],
-                "test:phpunit": [
-                    "phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -231,11 +198,11 @@
             ],
             "description": "Comprehensive PHPStan stubs for Easy Digital Downloads (core) - auto-generated, self-contained, plug & play",
             "keywords": [
+                "PHPStan",
                 "easy-digital-downloads",
                 "edd",
                 "ide-autocomplete",
                 "intellisense",
-                "phpstan",
                 "static-analysis",
                 "stubs",
                 "type-definitions",
@@ -243,16 +210,16 @@
                 "wordpress"
             ],
             "support": {
-                "source": "https://github.com/artkrsk/easy-digital-downloads-stubs/tree/v3.6.7",
-                "issues": "https://github.com/artkrsk/easy-digital-downloads-stubs/issues"
+                "issues": "https://github.com/artkrsk/easy-digital-downloads-stubs/issues",
+                "source": "https://github.com/artkrsk/easy-digital-downloads-stubs/tree/v3.7.0"
             },
             "funding": [
                 {
-                    "type": "buy_me_a_coffee",
-                    "url": "https://www.buymeacoffee.com/artemsemkin"
+                    "url": "https://www.buymeacoffee.com/artemsemkin",
+                    "type": "buy_me_a_coffee"
                 }
             ],
-            "time": "2026-05-16T10:04:34+00:00"
+            "time": "2026-08-14T05:48:07+00:00"
         },
         {
             "name": "arts/wp-plugin-standards",
@@ -5167,7 +5134,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "arts/base": 20,
-        "arts/easy-digital-downloads-stubs": 20,
         "arts/github-release-browser": 20,
         "arts/utilities": 20
     },

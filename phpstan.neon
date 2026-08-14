@@ -1,19 +1,14 @@
 includes:
-	- /Users/art/.composer/vendor/szepeviktor/phpstan-wordpress/extension.neon
+	- vendor/arts/wp-plugin-standards/phpstan/base.neon
+
 parameters:
-	level: 5
 	paths:
 		- src/php
 	excludePaths:
+		# Compiled JS/CSS landing zone, not PHP
 		- src/php/libraries/*
-		- src/php/Emails/*  # Depends on EDD classes not available in stubs
 	bootstrapFiles:
-		- .phpstan/phpstan-bootstrap.php
-	# Treat PHP 7.4 as baseline (your minimum version)
-	phpVersion: 70400
-	# Allow PHPStan to parse files with higher PHP version syntax (for stubs)
-	treatPhpDocTypesAsCertain: false
-	ignoreErrors:
-		# EDD functions might not be recognized
-		- '#Function edd_[a-zA-Z_]+ not found#'
-
+		- vendor/autoload.php
+		- phpstan-bootstrap.php
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+		- vendor/arts/easy-digital-downloads-stubs/easy-digital-downloads-stubs.php

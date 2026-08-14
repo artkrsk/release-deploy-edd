@@ -3,12 +3,12 @@
  */
 import {
   EDD_SELECTORS,
-  SettingsApp,
   FileStatus,
-  injectVersionSyncUI,
-  injectChangelogSyncUI,
+  initChangelogSync,
   initVersionSync,
-  initChangelogSync
+  injectChangelogSyncUI,
+  injectVersionSyncUI,
+  SettingsApp
 } from '@arts/release-deploy-core'
 import { initEDDMediaBrowser } from './media/edd-media-browser'
 
@@ -36,12 +36,12 @@ export function initCore() {
   }
 
   // Version sync - Lite version (looks for *-free-root)
-  jQuery(document).on('release-deploy-edd-version-sync-ready', function () {
+  jQuery(document).on('release-deploy-edd-version-sync-ready', () => {
     initVersionSync()
   })
 
   // Changelog sync - Lite version (looks for *-free-root)
-  jQuery(document).on('release-deploy-edd-changelog-sync-ready', function () {
+  jQuery(document).on('release-deploy-edd-changelog-sync-ready', () => {
     initChangelogSync()
   })
 

@@ -1,5 +1,5 @@
-import { IConfig, IWordPressMedia } from '@arts/release-deploy-core'
 import type { BrowserApp } from '@arts/github-release-browser'
+import { IConfig, IWordPressMedia } from '@arts/release-deploy-core'
 
 declare global {
   interface Window {

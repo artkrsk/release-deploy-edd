@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('@arts/release-deploy-core', () => ({
   EDD_SELECTORS: {
@@ -10,7 +10,7 @@ vi.mock('@arts/release-deploy-core', () => ({
   }
 }))
 
-import { initEDDMediaBrowser } from '@/media/edd-media-browser'
+import { initEDDMediaBrowser } from '@ts/media/edd-media-browser'
 
 /** Helpers to capture jQuery(document).on(event, selector, cb) calls. */
 type ClickHandler = { event: string; selector: string; cb: Function }
@@ -85,7 +85,9 @@ describe('initEDDMediaBrowser', () => {
       })
     }
 
-    vi.mocked(global.jQuery).mockImplementation((selector: any) => {
+    // Cast: JQueryStatic's overloads make TS pick the zero-arg call signature;
+    // the mock genuinely branches on the selector.
+    vi.mocked(jQuery).mockImplementation(((selector: any) => {
       if (selector === document) {
         return mockDocumentJq as any
       }
@@ -95,7 +97,7 @@ describe('initEDDMediaBrowser', () => {
           trigger: vi.fn().mockReturnThis()
         })
       } as any
-    })
+    }) as any)
   })
 
   afterEach(() => {
@@ -152,7 +154,7 @@ describe('initEDDMediaBrowser', () => {
     })
 
     function triggerClick() {
-      const handler = clickHandlers.find(h => h.selector === '.edd_upload_file_button')
+      const handler = clickHandlers.find((h) => h.selector === '.edd_upload_file_button')
       expect(handler).toBeDefined()
       handler!.cb()
     }
@@ -213,7 +215,7 @@ describe('initEDDMediaBrowser', () => {
 
       initEDDMediaBrowser()
       // Trigger click → augmentFrame → registers content:create handler
-      const handler = clickHandlers.find(h => h.selector === '.edd_upload_file_button')!
+      const handler = clickHandlers.find((h) => h.selector === '.edd_upload_file_button')!
       handler.cb()
 
       // Fire the content:create:github-releases callback → region.view = new ContentView()
@@ -255,9 +257,12 @@ describe('initEDDMediaBrowser', () => {
       const mockTrigger = vi.fn().mockReturnThis()
       const mockFind = vi.fn().mockReturnValue({ val: mockVal, trigger: mockTrigger })
 
-      vi.mocked(global.jQuery).mockImplementation(() => ({
-        find: mockFind
-      } as any))
+      vi.mocked(jQuery).mockImplementation(
+        () =>
+          ({
+            find: mockFind
+          }) as any
+      )
 
       capturedOnSelectAsset!({
         repo: 'owner/repo',
@@ -276,9 +281,12 @@ describe('initEDDMediaBrowser', () => {
 
       const mockVal = vi.fn().mockReturnThis()
       const mockTrigger = vi.fn().mockReturnThis()
-      vi.mocked(global.jQuery).mockImplementation(() => ({
-        find: vi.fn().mockReturnValue({ val: mockVal, trigger: mockTrigger })
-      } as any))
+      vi.mocked(jQuery).mockImplementation(
+        () =>
+          ({
+            find: vi.fn().mockReturnValue({ val: mockVal, trigger: mockTrigger })
+          }) as any
+      )
 
       capturedOnSelectAsset!({
         repo: 'owner/repo',
@@ -308,9 +316,12 @@ describe('initEDDMediaBrowser', () => {
       ;(window as any).formfield = formfield
 
       const mockVal = vi.fn().mockReturnThis()
-      vi.mocked(global.jQuery).mockImplementation(() => ({
-        find: vi.fn().mockReturnValue({ val: mockVal, trigger: vi.fn().mockReturnThis() })
-      } as any))
+      vi.mocked(jQuery).mockImplementation(
+        () =>
+          ({
+            find: vi.fn().mockReturnValue({ val: mockVal, trigger: vi.fn().mockReturnThis() })
+          }) as any
+      )
 
       capturedOnSelectAsset!({
         repo: 'owner/repo',

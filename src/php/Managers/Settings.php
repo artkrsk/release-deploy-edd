@@ -16,10 +16,10 @@ class Settings extends Manager {
 	/**
 	 * Add Release Deploy section to Extensions tab
 	 *
-	 * @param array $sections Settings sections array.
-	 * @return array
+	 * @param array<string, string> $sections Settings sections array.
+	 * @return array<string, string>
 	 */
-	public function add_section( $sections ) {
+	public function add_section( $sections ): array {
 		$sections['release_deploy'] = __( 'Release Deploy', 'release-deploy-edd' );
 
 		return $sections;
@@ -28,10 +28,10 @@ class Settings extends Manager {
 	/**
 	 * Add settings fields
 	 *
-	 * @param array $settings Settings array from EDD filter.
-	 * @return array
+	 * @param array<string, mixed> $settings Settings array from EDD filter.
+	 * @return array<string, mixed>
 	 */
-	public function add_settings( $settings ) {
+	public function add_settings( $settings ): array {
 		$github_settings = array(
 			'release_deploy' => array(
 				array(
@@ -63,7 +63,7 @@ class Settings extends Manager {
 	/**
 	 * Render React root for token field
 	 */
-	public function render_token_field() {
+	public function render_token_field(): void {
 		?><div id="release-deploy-edd-settings-root"></div>
 		<?php
 	}
@@ -71,8 +71,8 @@ class Settings extends Manager {
 	/**
 	 * Render Pro upgrade CTA
 	 */
-	public function render_upgrade_pro_field() {
-		$purchase_url = $this->config['purchase_url'] ?? 'https://artemsemkin.gumroad.com/l/release-deploy-edd-pro/';
+	public function render_upgrade_pro_field(): void {
+		$purchase_url = $this->get_purchase_url();
 		?>
 <div class="release-deploy-edd-upgrade-pro">
 	<h3 class="release-deploy-edd-upgrade-pro__title">
@@ -117,14 +117,15 @@ class Settings extends Manager {
 	/**
 	 * Handle AJAX test connection request
 	 */
-	public function ajax_test_connection() {
+	public function ajax_test_connection(): void {
 		check_ajax_referer( 'edd_release_deploy_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
 		}
 
-		$token = isset( $_POST['token'] ) ? sanitize_text_field( wp_unslash( $_POST['token'] ) ) : '';
+		$raw_token = $_POST['token'] ?? '';
+		$token     = is_string( $raw_token ) ? sanitize_text_field( wp_unslash( $raw_token ) ) : '';
 
 		/** Test GitHub API connection result @var bool $result */
 		$result = $this->services->github_api->test_connection( $token );
@@ -140,17 +141,17 @@ class Settings extends Manager {
 	/**
 	 * Add plugin action links to the plugins screen
 	 *
-	 * @param array $links Array of plugin action links.
-	 * @return array Modified array of plugin action links.
+	 * @param array<int|string, string> $links Array of plugin action links.
+	 * @return array<int|string, string> Modified array of plugin action links.
 	 */
-	public function add_plugin_action_links( $links ) {
+	public function add_plugin_action_links( $links ): array {
 		$new_links = array();
 
 		// Add Pro upgrade link FIRST if Pro is not installed
 		$plugins_dir     = dirname( ARTS_EDD_RD_PLUGIN_PATH );
 		$pro_plugin_file = $plugins_dir . '/release-deploy-edd-pro/release-deploy-edd-pro.php';
 		if ( ! file_exists( $pro_plugin_file ) ) {
-			$purchase_url = $this->config['purchase_url'] ?? 'https://artemsemkin.gumroad.com/l/release-deploy-edd-pro/';
+			$purchase_url = $this->get_purchase_url();
 			$new_links[]  = sprintf(
 				'<a href="%s" target="_blank" class="release-deploy-edd-upgrade-link">%s</a>',
 				esc_url( $purchase_url ),
@@ -159,13 +160,22 @@ class Settings extends Manager {
 		}
 
 		// Add Settings link
-		$settings_url = $this->config['settings_url'];
+		$settings_url = $this->config['settings_url'] ?? '';
 		$new_links[]  = sprintf(
 			'<a href="%s">%s</a>',
-			esc_url( $settings_url ),
+			esc_url( is_string( $settings_url ) ? $settings_url : '' ),
 			esc_html__( 'Settings', 'release-deploy-edd' )
 		);
 
 		return array_merge( $new_links, $links );
+	}
+
+	/**
+	 * Purchase URL from config, falling back to the canonical one.
+	 */
+	private function get_purchase_url(): string {
+		$url = $this->config['purchase_url'] ?? null;
+
+		return is_string( $url ) ? $url : 'https://artemsemkin.gumroad.com/l/release-deploy-edd-pro/';
 	}
 }

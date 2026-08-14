@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Arts\Base\Plugins\BasePlugin;
+use ArtsEDDRD\Arts\Base\Plugins\BasePlugin;
 
 /**
  * Base Plugin Class
@@ -24,19 +24,17 @@ abstract class Plugin extends BasePlugin {
 	/**
 	 * Initialize plugin
 	 */
-	protected function init() {
+	protected function init(): void {
 		$this->init_services_container();
 		$this->register_services();
 		parent::init();
 		$this->inject_services_to_managers();
-
-		return $this;
 	}
 
 	/**
 	 * Inject services container to all managers
 	 */
-	protected function inject_services_to_managers() {
+	protected function inject_services_to_managers(): void {
 		if ( ! is_object( $this->managers ) ) {
 			return;
 		}
@@ -51,14 +49,14 @@ abstract class Plugin extends BasePlugin {
 	/**
 	 * Initialize services container
 	 */
-	protected function init_services_container() {
+	protected function init_services_container(): void {
 		$this->services = new ServicesContainer();
 	}
 
 	/**
 	 * Register all services
 	 */
-	protected function register_services() {
+	protected function register_services(): void {
 		// Register core services
 		$this->register_core_services();
 
@@ -69,7 +67,7 @@ abstract class Plugin extends BasePlugin {
 	/**
 	 * Register core services
 	 */
-	protected function register_core_services() {
+	protected function register_core_services(): void {
 		$core_services = $this->get_core_services_classes();
 
 		foreach ( $core_services as $name => $class ) {
@@ -82,7 +80,7 @@ abstract class Plugin extends BasePlugin {
 	/**
 	 * Register pro services if they exist
 	 */
-	protected function register_pro_services() {
+	protected function register_pro_services(): void {
 		$pro_services = $this->get_pro_services_classes();
 
 		foreach ( $pro_services as $name => $class ) {
@@ -95,14 +93,14 @@ abstract class Plugin extends BasePlugin {
 	/**
 	 * Get core services classes to register
 	 *
-	 * @return array Service name => class mappings
+	 * @return array<string, class-string> Service name => class mappings
 	 */
 	abstract protected function get_core_services_classes();
 
 	/**
 	 * Get pro services classes to register
 	 *
-	 * @return array Service name => class mappings
+	 * @return array<string, class-string> Service name => class mappings
 	 */
 	protected function get_pro_services_classes() {
 		// Default empty, can be overridden in child class
@@ -121,11 +119,9 @@ abstract class Plugin extends BasePlugin {
 	/**
 	 * Initialize the managers container.
 	 *
-	 * Override to use custom ManagersContainer instead of default \stdClass.
-	 *
-	 * @return void
+	 * Override to use the typed ManagersContainer.
 	 */
-	protected function init_managers_container() {
+	protected function init_managers_container(): void {
 		$this->managers = new ManagersContainer();
 	}
 

@@ -1,15 +1,15 @@
-packages:
-  - '__build__'
-
 allowBuilds:
-  # @arts git deps: allow their npm "prepare" (their dist is committed; grb's prepare
-  # is just husky). Strict pnpm keys git deps by resolved tarball, so the hash-pinned
-  # keys are needed alongside the unscoped ones; bump the hash if a pin changes.
+  # @arts git deps: allow their npm "prepare" (their dist is committed; grb's
+  # prepare is just husky). Strict pnpm keys git deps by resolved tarball, so
+  # the hash-pinned keys are needed alongside the unscoped ones; bump the hash
+  # if a pin changes.
   '@arts/github-release-browser': true
-  '@arts/github-release-browser@https://codeload.github.com/artkrsk/github-release-browser/tar.gz/9efe9d2e0333de6e5800f98e93aa5e111238e37d': true
+  '@arts/github-release-browser@https://codeload.github.com/artkrsk/github-release-browser/tar.gz/72aef1a6e4ab50ef021fce9602c1f3c22cccd2b9': true
   '@arts/release-deploy-core': true
-  '@arts/release-deploy-core@https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/0e3b38a148e37328845ae241dfbc6df765e6fb5a': true
-  '@parcel/watcher': true
-  cypress: true
+  '@arts/release-deploy-core@https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/cf96057b539a08d7ea5c83c0e1db23b25fcd86c2': true
+  # sass pulls @parcel/watcher for its own CLI --watch, which this build never uses
+  '@parcel/watcher': false
   esbuild: true
-  fs-ext-extra-prebuilt: true
+  # lefthook's binary rides its optionalDependencies, not this script — all the
+  # postinstall does is write .git/hooks, which package.json#prepare does explicitly.
+  lefthook: false

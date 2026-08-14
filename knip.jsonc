@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["src/ts/index.ts", "project.config.js", "tests/**/*.test.ts"],
+  "project": ["src/ts/**/*.ts", "tests/**/*.ts"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreDependencies": [
+    // Invoked by CI and lefthook rather than imported.
+    "fallow"
+  ]
+}

@@ -4,13 +4,13 @@
  * Description: Automate your EDD workflow. Push a tag, create a GitHub release, and files are instantly available—supports private repos, no local storage.
  * Author: Artem Semkin
  * Author URI: https://artemsemkin.com
- * Plugin URI: https://artemsemkin.gumroad.com/l/release-deploy-edd-pro
+ * Plugin URI: https://artemsemkin.com/plugins/release-deploy-edd/
  * Text Domain: release-deploy-edd
  * Version: 1.0.4
  * License: GPL-3.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-3.0
  * Requires at least: 6.0
- * Requires PHP: 7.4
+ * Requires PHP: 8.0
  * Tested up to: 7.1
  * Requires Plugins: easy-digital-downloads
  */
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Arts\Utilities\Utilities;
+use ArtsEDDRD\Arts\Utilities\Utilities;
 use Arts\EDD\ReleaseDeploy\Plugin;
 
 $plugin_file    = __FILE__;

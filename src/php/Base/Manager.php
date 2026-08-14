@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Arts\Base\Managers\BaseManager;
+use ArtsEDDRD\Arts\Base\Managers\BaseManager;
 
 /**
  * Base Manager Class
@@ -17,7 +17,7 @@ abstract class Manager extends BaseManager {
 	/**
 	 * Managers container.
 	 *
-	 * @var \Arts\EDD\ReleaseDeploy\Base\ManagersContainer
+	 * @var \Arts\EDD\ReleaseDeploy\Base\ManagersContainer|null
 	 */
 	protected $managers;
 
@@ -33,7 +33,7 @@ abstract class Manager extends BaseManager {
 	 *
 	 * @param \Arts\EDD\ReleaseDeploy\Base\ServicesContainer $services Services container instance.
 	 */
-	public function set_services( $services ) {
+	public function set_services( $services ): void {
 		$this->services = $services;
 	}
 }

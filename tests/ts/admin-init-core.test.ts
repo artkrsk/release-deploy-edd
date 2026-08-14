@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 vi.mock('@arts/release-deploy-core', () => ({
   EDD_SELECTORS: {
@@ -16,13 +16,13 @@ vi.mock('@arts/release-deploy-core', () => ({
   initChangelogSync: vi.fn()
 }))
 
-vi.mock('@/media/edd-media-browser', () => ({
+vi.mock('@ts/media/edd-media-browser', () => ({
   initEDDMediaBrowser: vi.fn()
 }))
 
-import { initCore } from '@/admin-init-core'
-import { initEDDMediaBrowser } from '@/media/edd-media-browser'
-import { initVersionSync, initChangelogSync } from '@arts/release-deploy-core'
+import { initChangelogSync, initVersionSync } from '@arts/release-deploy-core'
+import { initCore } from '@ts/admin-init-core'
+import { initEDDMediaBrowser } from '@ts/media/edd-media-browser'
 
 describe('initCore', () => {
   let originalWp: any
@@ -48,7 +48,7 @@ describe('initCore', () => {
       return mockJqObj
     })
 
-    vi.mocked(global.jQuery).mockReturnValue(mockJqObj as any)
+    vi.mocked(jQuery).mockReturnValue(mockJqObj as any)
 
     ;(global as any).wp = {
       ...originalWp,
@@ -95,10 +95,7 @@ describe('initCore', () => {
 
     initCore()
 
-    expect(wp.element.render).toHaveBeenCalledWith(
-      expect.anything(),
-      settingsRoot
-    )
+    expect(wp.element.render).toHaveBeenCalledWith(expect.anything(), settingsRoot)
   })
 
   test('does not call wp.element.render when settings root is absent', () => {
@@ -169,10 +166,7 @@ describe('initCore', () => {
       expect(statusRoot.parentElement).toBe(container)
 
       // wp.element.render should have been called with the status root as mount point
-      expect(wp.element.render).toHaveBeenCalledWith(
-        expect.anything(),
-        statusRoot
-      )
+      expect(wp.element.render).toHaveBeenCalledWith(expect.anything(), statusRoot)
     })
 
     test('skips status root that has no upload wrapper ancestor', () => {
@@ -207,10 +201,7 @@ describe('initCore', () => {
       // Should still be inside container
       expect(statusRoot.parentElement).toBe(container)
       // But render was still called
-      expect(wp.element.render).toHaveBeenCalledWith(
-        expect.anything(),
-        statusRoot
-      )
+      expect(wp.element.render).toHaveBeenCalledWith(expect.anything(), statusRoot)
     })
   })
 })

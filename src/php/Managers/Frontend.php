@@ -18,7 +18,7 @@ class Frontend extends Manager {
 	 *
 	 * @param string $hook_suffix Current WordPress admin page hook.
 	 */
-	public function enqueue_scripts( $hook_suffix ) {
+	public function enqueue_scripts( $hook_suffix ): void {
 		$this->enqueue_settings_scripts( $hook_suffix );
 		$this->enqueue_metabox_scripts( $hook_suffix );
 		$this->enqueue_plugins_page_styles( $hook_suffix );
@@ -29,14 +29,14 @@ class Frontend extends Manager {
 	 *
 	 * @param string $hook_suffix Current WordPress admin page hook.
 	 */
-	private function enqueue_plugins_page_styles( $hook_suffix ) {
+	private function enqueue_plugins_page_styles( $hook_suffix ): void {
 		if ( $hook_suffix !== 'plugins.php' ) {
 			return;
 		}
 
 		wp_enqueue_style(
 			'release-deploy-edd',
-			untrailingslashit( $this->plugin_dir_url ) . '/libraries/release-deploy-edd/index.css',
+			untrailingslashit( $this->plugin_dir_url ) . '/libraries/release-deploy-edd/release-deploy-edd.css',
 			array(),
 			ARTS_EDD_RD_PLUGIN_VERSION
 		);
@@ -47,7 +47,7 @@ class Frontend extends Manager {
 	 *
 	 * @param string $hook_suffix Current WordPress admin page hook.
 	 */
-	private function enqueue_settings_scripts( $hook_suffix ) {
+	private function enqueue_settings_scripts( $hook_suffix ): void {
 		if ( $hook_suffix !== 'download_page_edd-settings' ) {
 			return;
 		}
@@ -76,14 +76,14 @@ class Frontend extends Manager {
 	 *
 	 * @param string $hook_suffix Current WordPress admin page hook.
 	 */
-	private function enqueue_metabox_scripts( $hook_suffix ) {
+	private function enqueue_metabox_scripts( $hook_suffix ): void {
 		global $post;
 
 		if ( $hook_suffix !== 'post.php' && $hook_suffix !== 'post-new.php' ) {
 			return;
 		}
 
-		if ( ! isset( $post ) || $post->post_type !== 'download' ) {
+		if ( ! $post instanceof \WP_Post || $post->post_type !== 'download' ) {
 			return;
 		}
 
@@ -93,12 +93,12 @@ class Frontend extends Manager {
 	/**
 	 * Enqueue common scripts and styles
 	 *
-	 * @param array $contexts Contexts to include in localized data.
+	 * @param array<int, string> $contexts Contexts to include in localized data.
 	 */
-	public function enqueue_common_scripts( $contexts = array() ) {
+	public function enqueue_common_scripts( $contexts = array() ): void {
 		wp_enqueue_script(
 			'release-deploy-edd',
-			untrailingslashit( $this->plugin_dir_url ) . '/libraries/release-deploy-edd/index.umd.js',
+			untrailingslashit( $this->plugin_dir_url ) . '/libraries/release-deploy-edd/release-deploy-edd.js',
 			array( 'react', 'react-dom', 'wp-element', 'wp-components', 'wp-i18n', 'wp-api-fetch' ),
 			ARTS_EDD_RD_PLUGIN_VERSION,
 			true
@@ -106,7 +106,7 @@ class Frontend extends Manager {
 
 		wp_enqueue_style(
 			'release-deploy-edd',
-			untrailingslashit( $this->plugin_dir_url ) . '/libraries/release-deploy-edd/index.css',
+			untrailingslashit( $this->plugin_dir_url ) . '/libraries/release-deploy-edd/release-deploy-edd.css',
 			array( 'wp-components' ),
 			ARTS_EDD_RD_PLUGIN_VERSION
 		);
@@ -122,9 +122,9 @@ class Frontend extends Manager {
 	/**
 	 * Get available features based on registered services
 	 *
-	 * @return array Feature flags for frontend
+	 * @return array<string, bool> Feature flags for frontend
 	 */
-	public function get_available_features() {
+	public function get_available_features(): array {
 		// Lite version - all Pro features are false (used for showing upgrade prompts)
 		return array(
 			'useLatestRelease' => false,
@@ -138,9 +138,9 @@ class Frontend extends Manager {
 	/**
 	 * Get translated strings for frontend
 	 *
-	 * @return array Translation strings
+	 * @return array<string, string> Translation strings
 	 */
-	private function get_frontend_strings() {
+	private function get_frontend_strings(): array {
 		return array(
 			// Common strings
 			'common.getPro'            => __( 'Get Pro', 'release-deploy-edd' ),
@@ -181,10 +181,10 @@ class Frontend extends Manager {
 	/**
 	 * Get centralized localized data for JavaScript
 	 *
-	 * @param string|array $contexts Specific contexts to include ('settings', 'metabox', 'browser', 'webhook')
-	 * @return array Localized data configuration
+	 * @param string|array<int, string> $contexts Specific contexts to include ('settings', 'metabox', 'browser', 'webhook')
+	 * @return array<string, mixed> Localized data configuration
 	 */
-	public function get_localized_data( $contexts = array() ) {
+	public function get_localized_data( $contexts = array() ): array {
 		// Ensure contexts is an array
 		if ( ! is_array( $contexts ) ) {
 			$contexts = array( $contexts );
@@ -197,7 +197,7 @@ class Frontend extends Manager {
 			'purchaseUrl'     => $this->config['purchase_url'] ?? '',
 			'supportUrl'      => $this->config['support_url'] ?? '',
 			'renewSupportUrl' => $this->config['renew_support_url'] ?? '',
-			'settingsUrl'     => $this->config['settings_url'],
+			'settingsUrl'     => $this->config['settings_url'] ?? '',
 			'strings'         => $this->get_frontend_strings(),
 			'contexts'        => array(),
 		);
@@ -215,7 +215,7 @@ class Frontend extends Manager {
 
 				case 'metabox':
 					global $post;
-					$post_id = $post ? $post->ID : 0;
+					$post_id = $post instanceof \WP_Post ? $post->ID : 0;
 
 					$data['contexts']['metabox'] = array(
 						'downloadId' => $post_id,

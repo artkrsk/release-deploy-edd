@@ -1,9 +1,9 @@
 {
   "name": "arts/release-deploy-edd",
-  "description": "Lite version - Serve EDD downloads directly from GitHub releases",
-  "type": "library",
-  "minimum-stability": "dev",
-  "repositories": [],
+  "version": "1.0.4",
+  "description": "Automate your EDD workflow. Push a tag, create a GitHub release, and files are instantly available—supports private repos, no local storage.",
+  "license": "GPL-3.0-or-later",
+  "type": "wordpress-plugin",
   "authors": [
     {
       "name": "Artem Semkin",
@@ -12,37 +12,107 @@
     }
   ],
   "homepage": "https://artemsemkin.com",
-  "wordpress": {
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/artkrsk/easy-digital-downloads-stubs"
+    }
+  ],
+  "plugin": {
     "Plugin Name": "Release Deploy for Easy Digital Downloads",
-    "Plugin URI": "https://artemsemkin.gumroad.com/l/release-deploy-edd-pro",
+    "Plugin URI": "https://artemsemkin.com/plugins/release-deploy-edd/",
     "Description": "Automate your EDD workflow. Push a tag, create a GitHub release, and files are instantly available—supports private repos, no local storage.",
     "Text Domain": "release-deploy-edd",
     "License": "GPL-3.0-or-later",
-    "License URI": "https://www.gnu.org/licenses/gpl-3.0",
+    "License URI": "https://www.gnu.org/licenses/gpl-3.0"
+  },
+  "wordpress": {
     "Requires at least": "6.0",
     "Tested up to": "7.1",
-    "Requires PHP": "7.4",
+    "Requires PHP": "8.0",
     "Requires Plugins": "easy-digital-downloads"
   },
-  "autoload": {
-    "psr-4": {
-      "Arts\\EDD\\ReleaseDeploy\\": "src/php/"
-    }
-  },
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.0",
     "arts/base": "@dev",
     "arts/utilities": "@dev",
     "arts/github-release-browser": "@dev"
   },
-    "config": {
+  "require-dev": {
+    "arts/easy-digital-downloads-stubs": "@dev",
+    "arts/wp-plugin-standards": "^1.0",
+    "brianhenryie/strauss": "^0.28",
+    "php-stubs/wp-cli-stubs": "^2.12",
+    "phpstan/phpstan": "^2.0",
+    "szepeviktor/phpstan-wordpress": "^2.0"
+  },
+  "autoload": {
+    "classmap": [
+      "vendor-prefixed/"
+    ],
+    "psr-4": {
+      "Arts\\EDD\\ReleaseDeploy\\": "src/php/"
+    }
+  },
+  "config": {
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
+    },
+    "optimize-autoloader": true
+  },
+  "extra": {
+    "strauss": {
+      "target_directory": "vendor-prefixed",
+      "namespace_prefix": "ArtsEDDRD\\",
+      "classmap_prefix": "ArtsEDDRD_",
+      "constant_prefix": "ARTS_EDD_RD_VENDOR_",
+      "classmap_output": true,
+      "include_modified_date": true,
+      "include_author": true,
+      "packages": [
+        "arts/base",
+        "arts/utilities",
+        "arts/github-release-browser"
+      ],
+      "update_call_sites": [
+        "src/php",
+        "src/wordpress-plugin"
+      ],
+      "delete_vendor_packages": false,
+      "exclude_from_copy": {
+        "file_patterns": [
+          "/^tests\\//",
+          "/phpcs\\.xml/",
+          "/phpstan/",
+          "/\\.github/",
+          "/\\.gitignore/",
+          "/composer\\.lock/",
+          "/dist\\//",
+          "/src\\/ts\\//",
+          "/captainhook\\.json/"
+        ]
+      }
     }
   },
   "scripts": {
-    "phpstan": "/opt/homebrew/opt/php@8.3/bin/php ~/.composer/vendor/bin/phpstan analyse --memory-limit=1G --no-progress",
-    "phpcs": "~/.composer/vendor/bin/phpcs --standard=.phpstan/phpcs.xml",
-    "phpcbf": "~/.composer/vendor/bin/phpcbf --standard=.phpstan/phpcs.xml"
+    "pre-autoload-dump": [
+      "@php -r \"is_dir('vendor-prefixed') || mkdir('vendor-prefixed');\""
+    ],
+    "post-install-cmd": [
+      "@php -r \"if (file_exists('vendor/bin/strauss')) { passthru(PHP_BINARY . ' vendor/bin/strauss'); passthru('composer dump-autoload'); }\""
+    ],
+    "post-update-cmd": [
+      "@php -r \"if (file_exists('vendor/bin/strauss')) { passthru(PHP_BINARY . ' vendor/bin/strauss'); passthru('composer dump-autoload'); }\""
+    ],
+    "prefix-namespaces": [
+      "@php vendor/bin/strauss",
+      "@composer dump-autoload"
+    ],
+    "phpstan": "phpstan analyse --memory-limit=4G",
+    "phpcs": "phpcs",
+    "phpcbf": "phpcbf"
   }
 }

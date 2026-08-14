@@ -2,17 +2,18 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 
-// Make React global for JSX (WordPress pattern)
-global.React = React
+// The mocks below stand in for host-provided globals (WP admin provides wp/
+// React/jQuery at runtime), so they are assigned through an untyped view of
+// globalThis on purpose — typing them as the real modules would claim a
+// fidelity these stubs don't have. window.releaseDeployEDD stays typed: it is
+// OUR contract (IConfig), and the compiler should verify the mock matches it.
+const host = globalThis as Record<string, unknown>
 
-// TypeScript declarations for test globals
-declare global {
-  var wp: any
-  var React: typeof import('react')
-}
+// Make React global for JSX (WordPress pattern)
+host['React'] = React
 
 // Mock WordPress globals
-global.wp = {
+host['wp'] = {
   i18n: {
     __: vi.fn((text: string) => text)
   },
@@ -26,7 +27,17 @@ global.wp = {
       React.createElement('div', { className: `wp-card ${className || ''}`, onClick }, children),
     CardBody: ({ children, className }: any) =>
       React.createElement('div', { className: `wp-card-body ${className || ''}` }, children),
-    TextControl: ({ value, onChange, onBlur, type, placeholder, disabled, help, className, maxLength }: any) =>
+    TextControl: ({
+      value,
+      onChange,
+      onBlur,
+      type,
+      placeholder,
+      disabled,
+      help,
+      className,
+      maxLength
+    }: any) =>
       React.createElement('div', { className: 'wp-text-control' }, [
         React.createElement('input', {
           key: 'input',
@@ -42,21 +53,30 @@ global.wp = {
         help && React.createElement('div', { key: 'help', className: 'wp-text-control-help' }, help)
       ]),
     Button: ({ children, variant, onClick, icon, disabled, label, className }: any) =>
-      React.createElement('button', {
-        onClick,
-        disabled,
-        'aria-label': label,
-        className: `wp-button wp-button-${variant || 'primary'} ${className || ''}`,
-        title: label
-      }, [
-        icon && React.createElement('span', { key: 'icon', className: `dashicons dashicons-${icon}` }),
-        children
-      ]),
+      React.createElement(
+        'button',
+        {
+          onClick,
+          disabled,
+          'aria-label': label,
+          className: `wp-button wp-button-${variant || 'primary'} ${className || ''}`,
+          title: label
+        },
+        [
+          icon &&
+            React.createElement('span', { key: 'icon', className: `dashicons dashicons-${icon}` }),
+          children
+        ]
+      ),
     Notice: ({ children, status, isDismissible, className }: any) =>
-      React.createElement('div', {
-        className: `wp-notice wp-notice-${status || 'info'} ${className || ''}`,
-        'data-dismissible': isDismissible
-      }, children),
+      React.createElement(
+        'div',
+        {
+          className: `wp-notice wp-notice-${status || 'info'} ${className || ''}`,
+          'data-dismissible': isDismissible
+        },
+        children
+      ),
     Spinner: () =>
       React.createElement('div', { className: 'wp-spinner', 'data-testid': 'spinner' }),
     SearchControl: ({ value, onChange, placeholder }: any) =>
@@ -74,7 +94,9 @@ global.wp = {
 global.window.releaseDeployEDD = {
   purchaseUrl: 'https://example.com/purchase',
   supportUrl: 'https://example.com/support',
-  settingsUrl: '/wp-admin/edit.php?post_type=download&page=edd-settings&tab=extensions&section=release_deploy',
+  renewSupportUrl: 'https://example.com/renew',
+  settingsUrl:
+    '/wp-admin/edit.php?post_type=download&page=edd-settings&tab=extensions&section=release_deploy',
   ajaxUrl: '/wp-admin/admin-ajax.php',
   features: {
     useLatestRelease: false,
@@ -100,7 +122,7 @@ global.window.releaseDeployEDD = {
 }
 
 /** Mock jQuery for DOM manipulation tests */
-global.jQuery = vi.fn((selector: any) => {
+const jQueryMock = vi.fn((_selector: any) => {
   const mockElement = {
     length: 0,
     val: vi.fn().mockReturnValue(''),
@@ -117,13 +139,18 @@ global.jQuery = vi.fn((selector: any) => {
     append: vi.fn().mockReturnThis(),
     data: vi.fn().mockReturnValue({}),
     trigger: vi.fn().mockReturnThis(),
-    ready: vi.fn((cb: Function) => { cb(); return mockElement }),
+    ready: vi.fn((cb: Function) => {
+      cb()
+      return mockElement
+    }),
     [0]: null,
     [1]: null
   }
 
   return mockElement
-}) as any
+})
+
+host['jQuery'] = jQueryMock
 
 // Make jQuery available as $ too
-;(global as any).$ = global.jQuery
+host['$'] = jQueryMock

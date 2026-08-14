@@ -9,22 +9,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Services Container
  *
- * Provides dynamic property access to services with type safety.
- * Implements IteratorAggregate to support foreach iteration.
+ * Same ArrayObject-plus-property-magic shape as the framework's managers
+ * container: `$services->github_api = …` stores through offsets, `foreach`
+ * iterates them, and an unregistered service reads as `null` instead of
+ * raising a notice.
  *
- * @property \Arts\GH\ReleaseBrowser\Core\Interfaces\IPlatformAPI $github_api
- * @property \Arts\GH\ReleaseBrowser\Core\Services\URIParser $uri_parser
- * @property \Arts\GH\ReleaseBrowser\Core\Services\AssetResolver $asset_resolver
+ * @property \ArtsEDDRD\Arts\GH\ReleaseBrowser\Core\Interfaces\IPlatformAPI $github_api
+ * @property \ArtsEDDRD\Arts\GH\ReleaseBrowser\Core\Services\URIParser $uri_parser
+ * @property \ArtsEDDRD\Arts\GH\ReleaseBrowser\Core\Services\AssetResolver $asset_resolver
  *
- * @implements \IteratorAggregate<string,object>
+ * @extends \ArrayObject<string, object>
  */
-class ServicesContainer extends \stdClass implements \IteratorAggregate {
+class ServicesContainer extends \ArrayObject {
+
 	/**
-	 * Get iterator for foreach loops
-	 *
-	 * @return \Traversable<string, object>
+	 * @param string $name Service id.
+	 * @return object|null `null` when the service isn't registered (vs. raising a notice).
 	 */
-	public function getIterator(): \Traversable {
-		return new \ArrayIterator( get_object_vars( $this ) );
+	public function __get( $name ) {
+		return $this->offsetExists( $name ) ? $this->offsetGet( $name ) : null;
+	}
+
+	/**
+	 * @param string $name  Service id.
+	 * @param object $value Service instance.
+	 * @return void
+	 */
+	public function __set( $name, $value ) {
+		$this->offsetSet( $name, $value );
+	}
+
+	/**
+	 * @param string $name Service id.
+	 * @return bool
+	 */
+	public function __isset( $name ) {
+		return $this->offsetExists( $name );
 	}
 }

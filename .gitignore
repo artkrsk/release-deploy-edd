@@ -82,3 +82,9 @@ next-env.d.ts
 .cursor
 ai-docs
 CLAUDE.md
+
+# Strauss output + compiled libraries
+/vendor-prefixed
+
+# Tooling caches
+.fallow/

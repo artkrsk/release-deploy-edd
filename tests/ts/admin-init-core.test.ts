@@ -27,7 +27,7 @@ import { initEDDMediaBrowser } from '@ts/media/edd-media-browser'
 describe('initCore', () => {
   let originalWp: any
   /** Events registered via jQuery(document).on(event, cb) */
-  let registeredEvents: Map<string, Function[]>
+  let registeredEvents: Map<string, Array<(...args: unknown[]) => unknown>>
 
   beforeEach(() => {
     originalWp = (global as any).wp
@@ -36,14 +36,14 @@ describe('initCore', () => {
     registeredEvents = new Map()
 
     const mockJqObj: any = {}
-    mockJqObj.on = vi.fn((event: string, cb: Function) => {
+    mockJqObj.on = vi.fn((event: string, cb: (...args: unknown[]) => unknown) => {
       if (!registeredEvents.has(event)) {
         registeredEvents.set(event, [])
       }
-      registeredEvents.get(event)!.push(cb)
+      registeredEvents.get(event)?.push(cb)
       return mockJqObj
     })
-    mockJqObj.ready = vi.fn((cb: Function) => {
+    mockJqObj.ready = vi.fn((cb: (...args: unknown[]) => unknown) => {
       cb()
       return mockJqObj
     })
@@ -119,8 +119,8 @@ describe('initCore', () => {
   test('version-sync-ready listener invokes initVersionSync', () => {
     initCore()
 
-    const [cb] = registeredEvents.get('release-deploy-edd-version-sync-ready')!
-    cb!()
+    const [cb] = registeredEvents.get('release-deploy-edd-version-sync-ready') ?? []
+    cb?.()
 
     expect(initVersionSync).toHaveBeenCalledOnce()
   })
@@ -128,8 +128,8 @@ describe('initCore', () => {
   test('changelog-sync-ready listener invokes initChangelogSync', () => {
     initCore()
 
-    const [cb] = registeredEvents.get('release-deploy-edd-changelog-sync-ready')!
-    cb!()
+    const [cb] = registeredEvents.get('release-deploy-edd-changelog-sync-ready') ?? []
+    cb?.()
 
     expect(initChangelogSync).toHaveBeenCalledOnce()
   })

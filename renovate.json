@@ -1,4 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>artkrsk/renovate-config"]
+  "extends": ["github>artkrsk/renovate-config"],
+  "packageRules": [
+    {
+      "description": "React majors are pinned to WordPress's bundled runtime: react is externalized to wp-admin's copy, so CI cannot catch a break — the bundle never contains React and the tests mock wp. Bump only when WordPress itself moves.",
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ]
 }

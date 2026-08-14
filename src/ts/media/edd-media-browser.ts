@@ -35,7 +35,7 @@ export function initEDDMediaBrowser(): void {
   const $ = w.jQuery
   const wpMedia = w.wp?.media
 
-  if (!$ || !wpMedia || !wpMedia.frames) {
+  if (!$ || !wpMedia?.frames) {
     return
   }
 
@@ -50,7 +50,7 @@ export function initEDDMediaBrowser(): void {
 /** Poll for EDD's media frame and its rendered menu, then augment it. */
 function waitForFrameMenu(wpMedia: any, tries: number): void {
   const frame = wpMedia.frames.file_frame
-  if (frame && frame.menu && frame.menu.view) {
+  if (frame?.menu?.view) {
     augmentFrame(frame)
     return
   }

@@ -7,13 +7,19 @@ import { vi } from 'vitest'
 // globalThis on purpose — typing them as the real modules would claim a
 // fidelity these stubs don't have. window.releaseDeployEDD stays typed: it is
 // OUR contract (IConfig), and the compiler should verify the mock matches it.
-const host = globalThis as Record<string, unknown>
+interface HostGlobals {
+  React?: unknown
+  wp?: unknown
+  jQuery?: unknown
+  $?: unknown
+}
+const host = globalThis as HostGlobals
 
 // Make React global for JSX (WordPress pattern)
-host['React'] = React
+host.React = React
 
 // Mock WordPress globals
-host['wp'] = {
+host.wp = {
   i18n: {
     __: vi.fn((text: string) => text)
   },
@@ -43,7 +49,7 @@ host['wp'] = {
           key: 'input',
           type: type || 'text',
           value: value || '',
-          onChange: (e: any) => onChange && onChange(e.target.value),
+          onChange: (e: any) => onChange?.(e.target.value),
           onBlur: onBlur,
           placeholder,
           disabled,
@@ -56,6 +62,7 @@ host['wp'] = {
       React.createElement(
         'button',
         {
+          type: 'button',
           onClick,
           disabled,
           'aria-label': label,
@@ -83,7 +90,7 @@ host['wp'] = {
       React.createElement('input', {
         type: 'search',
         value: value || '',
-        onChange: (e: any) => onChange && onChange(e.target.value),
+        onChange: (e: any) => onChange?.(e.target.value),
         placeholder,
         className: 'wp-search-control'
       })
@@ -139,18 +146,18 @@ const jQueryMock = vi.fn((_selector: any) => {
     append: vi.fn().mockReturnThis(),
     data: vi.fn().mockReturnValue({}),
     trigger: vi.fn().mockReturnThis(),
-    ready: vi.fn((cb: Function) => {
+    ready: vi.fn((cb: (...args: unknown[]) => unknown) => {
       cb()
       return mockElement
     }),
-    [0]: null,
-    [1]: null
+    0: null,
+    1: null
   }
 
   return mockElement
 })
 
-host['jQuery'] = jQueryMock
+host.jQuery = jQueryMock
 
 // Make jQuery available as $ too
-host['$'] = jQueryMock
+host.$ = jQueryMock

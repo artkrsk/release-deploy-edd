@@ -13,7 +13,7 @@ vi.mock('@arts/release-deploy-core', () => ({
 import { initEDDMediaBrowser } from '@ts/media/edd-media-browser'
 
 /** Helpers to capture jQuery(document).on(event, selector, cb) calls. */
-type ClickHandler = { event: string; selector: string; cb: Function }
+type ClickHandler = { event: string; selector: string; cb: (...args: unknown[]) => unknown }
 
 function buildMockMedia() {
   const mockFrame: any = {
@@ -79,7 +79,7 @@ describe('initEDDMediaBrowser', () => {
     ;(window as any).ArtsGitHubReleaseBrowser = vi.fn()
 
     mockDocumentJq = {
-      on: vi.fn((event: string, selector: string, cb: Function) => {
+      on: vi.fn((event: string, selector: string, cb: (...args: unknown[]) => unknown) => {
         clickHandlers.push({ event, selector, cb })
         return mockDocumentJq
       })
@@ -156,7 +156,7 @@ describe('initEDDMediaBrowser', () => {
     function triggerClick() {
       const handler = clickHandlers.find((h) => h.selector === '.edd_upload_file_button')
       expect(handler).toBeDefined()
-      handler!.cb()
+      handler?.cb()
     }
 
     test('adds the github-releases state', () => {
@@ -195,7 +195,7 @@ describe('initEDDMediaBrowser', () => {
   // ---------------------------------------------------------------------------
 
   describe('mountBrowser and onSelectAsset', () => {
-    let capturedOnSelectAsset: Function | undefined
+    let capturedOnSelectAsset: ((asset: unknown) => void) | undefined
 
     function triggerFullMount() {
       mockMedia.frames.file_frame = mockFrame
@@ -215,7 +215,10 @@ describe('initEDDMediaBrowser', () => {
 
       initEDDMediaBrowser()
       // Trigger click → augmentFrame → registers content:create handler
-      const handler = clickHandlers.find((h) => h.selector === '.edd_upload_file_button')!
+      const handler = clickHandlers.find((h) => h.selector === '.edd_upload_file_button')
+      if (!handler) {
+        throw new Error('click handler for .edd_upload_file_button was not registered')
+      }
       handler.cb()
 
       // Fire the content:create:github-releases callback → region.view = new ContentView()
@@ -225,7 +228,7 @@ describe('initEDDMediaBrowser', () => {
       expect(contentCreateCall).toBeDefined()
 
       const region: any = {}
-      contentCreateCall![1](region)
+      contentCreateCall?.[1](region)
 
       // Call render() on the view → queues mountBrowser via setTimeout
       expect(region.view).toBeDefined()
@@ -264,7 +267,7 @@ describe('initEDDMediaBrowser', () => {
           }) as any
       )
 
-      capturedOnSelectAsset!({
+      capturedOnSelectAsset?.({
         repo: 'owner/repo',
         release: 'v1.0.0',
         asset: { name: 'plugin.zip', isDirectory: false }
@@ -288,7 +291,7 @@ describe('initEDDMediaBrowser', () => {
           }) as any
       )
 
-      capturedOnSelectAsset!({
+      capturedOnSelectAsset?.({
         repo: 'owner/repo',
         release: 'v1.0.0',
         asset: { name: 'plugin.zip', isDirectory: false }
@@ -300,7 +303,7 @@ describe('initEDDMediaBrowser', () => {
     test('onSelectAsset closes the frame after selection', () => {
       expect(capturedOnSelectAsset).toBeDefined()
 
-      capturedOnSelectAsset!({
+      capturedOnSelectAsset?.({
         repo: 'owner/repo',
         release: 'v1.0.0',
         asset: { name: 'plugin.zip', isDirectory: false }
@@ -323,7 +326,7 @@ describe('initEDDMediaBrowser', () => {
           }) as any
       )
 
-      capturedOnSelectAsset!({
+      capturedOnSelectAsset?.({
         repo: 'owner/repo',
         release: 'v1.0.0',
         asset: { name: 'my-dir', isDirectory: true }

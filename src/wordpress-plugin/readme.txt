@@ -7,6 +7,7 @@ Requires PHP: 8.0
 Stable tag: 1.0.4
 license: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0
+GitHub Plugin URI: https://github.com/artkrsk/release-deploy-edd/
 
 Automate your EDD workflow. Push a tag, create a GitHub release, and files are instantly available—supports private repos, no local storage.
 

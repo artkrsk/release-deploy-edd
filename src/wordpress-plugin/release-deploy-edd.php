@@ -35,7 +35,6 @@ define( 'ARTS_EDD_RD_PLUGIN_URL', untrailingslashit( plugin_dir_url( $plugin_fil
 // If Pro is active - show conflict notice and don't load Lite
 if ( defined( 'ARTS_EDD_RD_PRO_PLUGIN_VERSION' ) ) {
 	add_action( 'admin_notices', 'release_deploy_edd_show_conflict_notice' );
-	// Don't load the current plugin (Lite) if Pro version is active
 	return;
 }
 
@@ -52,7 +51,6 @@ Plugin::instance();
  * Display conflict notice when Pro plugin is active
  */
 function release_deploy_edd_show_conflict_notice() {
-	// Get deactivation URL with nonce
 	$deactivate_url = wp_nonce_url(
 		admin_url( 'plugins.php?action=deactivate&plugin=' . urlencode( plugin_basename( ARTS_EDD_RD_PLUGIN_FILE ) ) ),
 		'deactivate-plugin_' . plugin_basename( ARTS_EDD_RD_PLUGIN_FILE )
@@ -74,7 +72,6 @@ function release_deploy_edd_show_conflict_notice() {
  * Display notice encouraging Pro activation when installed but inactive
  */
 function release_deploy_edd_show_pro_activation_notice() {
-	// Get activation URL with nonce
 	$pro_plugin_file = 'release-deploy-edd-pro/release-deploy-edd-pro.php';
 	$activate_url    = wp_nonce_url(
 		admin_url( 'plugins.php?action=activate&plugin=' . urlencode( $pro_plugin_file ) ),

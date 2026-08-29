@@ -25,7 +25,6 @@ class Downloads extends Manager {
 	public function maybe_serve_from_github( $file, $download_files, $file_key, $args = array() ) {
 		$entry = $download_files[ $file_key ] ?? null;
 
-		// Early return for non-GitHub files
 		if ( ! is_array( $entry ) || ! isset( $entry['file'] ) || ! is_string( $entry['file'] ) ) {
 			return $file;
 		}
@@ -36,7 +35,8 @@ class Downloads extends Manager {
 			return $file;
 		}
 
-		// Extract payment/order context if available
+		// Absent when EDD Software Licensing applies this filter: it passes only
+		// three arguments, so $args defaults to an empty array on that path.
 		$payment_id  = isset( $args['payment_id'] ) && is_numeric( $args['payment_id'] ) ? (int) $args['payment_id'] : null;
 		$download_id = isset( $args['download_id'] ) && is_numeric( $args['download_id'] ) ? (int) $args['download_id'] : null;
 
@@ -61,14 +61,12 @@ class Downloads extends Manager {
 			return null;
 		}
 
-		// Resolve the release using available services
 		$release = $this->resolve_release( $parsed['repo'], $parsed['release'] );
 
 		if ( ! $release ) {
 			return null;
 		}
 
-		// Find asset in release
 		$asset = $this->services->asset_resolver->find_asset_in_release( $release, $parsed['asset'] ?? null );
 
 		if ( ! $asset || empty( $asset['id'] ) || ! is_numeric( $asset['id'] ) ) {

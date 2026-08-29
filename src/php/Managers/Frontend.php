@@ -60,12 +60,10 @@ class Frontend extends Manager {
 			return;
 		}
 
-		// Don't load if it's a different section
 		if ( $current_section && 'release_deploy' !== $current_section ) {
 			return;
 		}
 
-		// Include settings context
 		$contexts = array( 'settings' );
 
 		$this->enqueue_common_scripts( $contexts );
@@ -111,7 +109,6 @@ class Frontend extends Manager {
 			ARTS_EDD_RD_PLUGIN_VERSION
 		);
 
-		// Localize script with centralized data
 		wp_localize_script(
 			'release-deploy-edd',
 			'releaseDeployEDD',
@@ -185,12 +182,10 @@ class Frontend extends Manager {
 	 * @return array<string, mixed> Localized data configuration
 	 */
 	public function get_localized_data( $contexts = array() ): array {
-		// Ensure contexts is an array
 		if ( ! is_array( $contexts ) ) {
 			$contexts = array( $contexts );
 		}
 
-		// Build base configuration with common data
 		$data = array(
 			'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
 			'features'        => $this->get_available_features(),

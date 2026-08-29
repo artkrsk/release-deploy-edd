@@ -27,7 +27,8 @@ export function initCore() {
     wp.element.render(wp.element.createElement(SettingsApp), settingsRoot)
   }
 
-  // Inject sync UI if on metabox page (only if Software Licensing is enabled)
+  // Only the metabox context is checked here; the inject helpers themselves
+  // bail unless EDD Software Licensing enabled sync for this download.
   if (window.releaseDeployEDD?.contexts?.metabox) {
     jQuery(document).ready(() => {
       injectVersionSyncUI()
@@ -45,10 +46,8 @@ export function initCore() {
     initChangelogSync()
   })
 
-  // File status indicators
   initializeFileStatusIndicators()
 
-  // Setup file row observers
   setupFileRowObservers()
 }
 
@@ -82,7 +81,6 @@ function initializeFileStatusForElement(root: HTMLElement, FileStatusComponent?:
   // Update the data attribute to match the current input value
   root.setAttribute('data-file-url', fileUrl)
 
-  // Use the FileStatus component (already imported at the top)
   const component = FileStatusComponent || FileStatus
 
   // Unmount any existing React component first
@@ -106,11 +104,9 @@ function setupFileRowObservers() {
     const rowElement = row && typeof row === 'object' && row.jquery ? row[0] : row
     if (!rowElement) return
 
-    // Check if this row has a file status indicator
     const fileStatusRoot = rowElement.querySelector('.release-deploy-edd-file-status-root')
     if (!fileStatusRoot) return
 
-    // Initialize the status indicator for this new row
     initializeFileStatusForElement(fileStatusRoot as HTMLElement)
   })
 
@@ -121,20 +117,19 @@ function setupFileRowObservers() {
         if (node.nodeType !== Node.ELEMENT_NODE) return
         const element = node as Element
 
-        // Check if the removed node contains status indicators
         const statusIndicators = element.classList?.contains('release-deploy-edd-file-status-root')
           ? [element]
           : Array.from(element.querySelectorAll('.release-deploy-edd-file-status-root'))
 
         statusIndicators.forEach((statusRoot) => {
-          // Explicitly unmount the React component to ensure cleanup
           wp.element.unmountComponentAtNode(statusRoot)
         })
       })
     })
   })
 
-  // Observe the file rows container for removals
+  // The matched row is itself what EDD removes, so the observer has to sit on
+  // its parent to see the removal at all.
   const fileRowsContainer = document.querySelector(EDD_SELECTORS.REPEATABLE_ROW)
   if (fileRowsContainer) {
     observer.observe(fileRowsContainer.parentElement || document.body, {
@@ -143,7 +138,6 @@ function setupFileRowObservers() {
     })
   }
 
-  // Cleanup observer on page unload
   window.addEventListener('beforeunload', () => {
     observer.disconnect()
   })

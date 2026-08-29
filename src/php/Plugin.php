@@ -75,10 +75,10 @@ class Plugin extends BasePlugin {
 	 * Override to register package browser services
 	 */
 	protected function register_core_services(): void {
-		// Initialize package browser first
+		// The browser owns the service instances, so it must exist before they
+		// can be handed to the container.
 		$this->init_package_browser();
 
-		// Register package browser's services directly
 		$this->register_package_services();
 	}
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2083572de68e2f21ef6ea9099e56090",
+    "content-hash": "ac356facb133ee9551384a6bb69ccd45",
     "packages": [
         {
             "name": "arts/base",
@@ -57,16 +57,16 @@
         },
         {
             "name": "arts/github-release-browser",
-            "version": "v1.0.2",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/github-release-browser.git",
-                "reference": "6b23d6d6d759c141345fd43d73d80ff2b457156b"
+                "reference": "2d9f583f64f2c1a4e480a766f9f5371ea384ed2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/6b23d6d6d759c141345fd43d73d80ff2b457156b",
-                "reference": "6b23d6d6d759c141345fd43d73d80ff2b457156b",
+                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/2d9f583f64f2c1a4e480a766f9f5371ea384ed2e",
+                "reference": "2d9f583f64f2c1a4e480a766f9f5371ea384ed2e",
                 "shasum": ""
             },
             "require": {
@@ -91,16 +91,54 @@
                     "Arts\\GH\\ReleaseBrowser\\": "src/php/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Arts\\GH\\ReleaseBrowser\\Tests\\": "tests/php/"
+                }
+            },
+            "scripts": {
+                "post-install-cmd": [
+                    "vendor/bin/captainhook install -f -s"
+                ],
+                "post-update-cmd": [
+                    "vendor/bin/captainhook install -f -s"
+                ],
+                "check": [
+                    "@phpcs",
+                    "@phpstan",
+                    "@test"
+                ],
+                "fix": [
+                    "@phpcbf"
+                ],
+                "phpcbf": [
+                    "vendor/bin/phpcbf --standard=.phpstan/phpcs.xml"
+                ],
+                "phpcs": [
+                    "vendor/bin/phpcs --standard=.phpstan/phpcs.xml"
+                ],
+                "phpstan": [
+                    "vendor/bin/phpstan analyse --memory-limit=1G --no-progress"
+                ],
+                "phpstan:baseline": [
+                    "phpstan analyse --memory-limit=1G --generate-baseline"
+                ],
+                "test": [
+                    "vendor/bin/phpunit"
+                ],
+                "test:coverage": [
+                    "vendor/bin/phpunit --coverage-html coverage/php"
+                ]
+            },
             "license": [
                 "GPL-3.0-or-later"
             ],
             "description": "Reusable GitHub release browser with PHP backend & React frontend",
             "support": {
-                "issues": "https://github.com/artkrsk/github-release-browser/issues",
-                "source": "https://github.com/artkrsk/github-release-browser/tree/v1.0.2"
+                "source": "https://github.com/artkrsk/github-release-browser/tree/v1.1.0",
+                "issues": "https://github.com/artkrsk/github-release-browser/issues"
             },
-            "time": "2026-06-28T20:29:57+00:00"
+            "time": "2026-09-15T11:39:12+00:00"
         },
         {
             "name": "arts/utilities",
@@ -5143,5 +5181,5 @@
         "php": ">=8.0"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

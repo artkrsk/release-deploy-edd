@@ -6,7 +6,7 @@
  * Author URI: https://artemsemkin.com
  * Plugin URI: https://artemsemkin.com/plugins/release-deploy-edd/
  * Text Domain: release-deploy-edd
- * Version: 1.0.4
+ * Version: 1.1.0
  * License: GPL-3.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-3.0
  * Requires at least: 6.0

@@ -32,20 +32,36 @@ define( 'ARTS_EDD_RD_PLUGIN_FILE', $plugin_file );
 define( 'ARTS_EDD_RD_PLUGIN_PATH', untrailingslashit( plugin_dir_path( $plugin_file ) ) );
 define( 'ARTS_EDD_RD_PLUGIN_URL', untrailingslashit( plugin_dir_url( $plugin_file ) ) );
 
-// If Pro is active - show conflict notice and don't load Lite
-if ( defined( 'ARTS_EDD_RD_PRO_PLUGIN_VERSION' ) ) {
-	add_action( 'admin_notices', 'release_deploy_edd_show_conflict_notice' );
-	return;
-}
+/**
+ * Deferred to plugins_loaded, not run at top-level file execution: WordPress includes every active
+ * plugin's main file in the order they appear in the `active_plugins` option (activation order, not
+ * anything deterministic), all before plugins_loaded fires. Checking `defined('ARTS_EDD_RD_PRO_PLUGIN_VERSION')`
+ * at top level only catches the conflict when Pro's file happens to load first in THIS request — if
+ * Lite was activated before Pro (installing Pro without deactivating Lite first is an ordinary path),
+ * Lite's own file runs before Pro's has defined anything, the check silently passes, and both plugins'
+ * Plugin::instance() end up constructed in the same request. plugins_loaded fires only after every
+ * active plugin's file has already run, so the same check there is activation-order-independent.
+ * is_plugin_active() is not a substitute — it lives in an admin-only file, absent on front-end/REST.
+ */
+add_action(
+	'plugins_loaded',
+	function () {
+		// If Pro is active - show conflict notice and don't load Lite
+		if ( defined( 'ARTS_EDD_RD_PRO_PLUGIN_VERSION' ) ) {
+			add_action( 'admin_notices', 'release_deploy_edd_show_conflict_notice' );
+			return;
+		}
 
-// Check if Pro is installed but not active and show notice
-$pro_plugin_file = 'release-deploy-edd-pro/release-deploy-edd-pro.php';
-$plugins_dir     = dirname( ARTS_EDD_RD_PLUGIN_PATH );
-if ( file_exists( $plugins_dir . '/' . $pro_plugin_file ) ) {
-	add_action( 'admin_notices', 'release_deploy_edd_show_pro_activation_notice' );
-}
+		// Check if Pro is installed but not active and show notice
+		$pro_plugin_file = 'release-deploy-edd-pro/release-deploy-edd-pro.php';
+		$plugins_dir     = dirname( ARTS_EDD_RD_PLUGIN_PATH );
+		if ( file_exists( $plugins_dir . '/' . $pro_plugin_file ) ) {
+			add_action( 'admin_notices', 'release_deploy_edd_show_pro_activation_notice' );
+		}
 
-Plugin::instance();
+		Plugin::instance();
+	}
+);
 
 /**
  * Display conflict notice when Pro plugin is active

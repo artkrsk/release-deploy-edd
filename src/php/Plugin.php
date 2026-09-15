@@ -151,6 +151,10 @@ class Plugin extends BasePlugin {
 	protected function add_filters(): void {
 		add_filter( 'edd_requested_file', array( $this->managers->downloads, 'maybe_serve_from_github' ), 10, 4 );
 
+		// Integration seam: hand an asset's bytes to code that needs to inspect them (a version
+		// inside a ZIP, say). A hook, not an accessor — see Downloads::filter_asset_file().
+		add_filter( 'edd_release_deploy_asset_file', array( $this->managers->downloads, 'filter_asset_file' ), 10, 4 );
+
 		if ( is_admin() ) {
 			add_filter( 'edd_settings_sections_extensions', array( $this->managers->settings, 'add_section' ) );
 			add_filter( 'edd_settings_extensions', array( $this->managers->settings, 'add_settings' ) );
@@ -169,6 +173,9 @@ class Plugin extends BasePlugin {
 		$this->package_browser = new Browser(
 			array(
 				'cache_prefix'  => 'edd_release_deploy_',
+				// EDD's own "manage downloads" capability, not the package's manage_options default:
+				// shop managers author download files and must reach the browser, site admins aside.
+				'capability'    => 'edit_products',
 				'github_token'  => $this->get_github_token(),
 				'protocol'      => 'edd-release-deploy://',
 				'action_prefix' => 'edd_release_deploy',

@@ -100,4 +100,54 @@ class Downloads extends Manager {
 		// "latest" keyword requires Pro version
 		return null;
 	}
+	/**
+	 * Answer `edd_release_deploy_asset_file` — download a release asset and hand back a local path.
+	 *
+	 * The integration seam for code that needs an asset's BYTES (to read a version out of a ZIP, say).
+	 * A filter rather than an accessor on purpose: the two tiers ship different class namespaces and the
+	 * vendored GitHub client is namespace-prefixed per build, so no class or interface name is stable
+	 * for an outside caller — a hook name is. Nothing internal is handed out.
+	 *
+	 * The caller owns the returned file and must delete it. Returns the unmodified default ('' unless
+	 * another callback got there first) on any failure, so a consumer can treat '' as "not available".
+	 *
+	 * @param string|mixed $path      Default, normally ''.
+	 * @param string|mixed $repo      Repository in `owner/name` form.
+	 * @param int|mixed    $asset_id  Release asset id.
+	 * @param int|mixed    $max_bytes Refuse anything larger, 0 for no limit.
+	 * @return string
+	 */
+	public function filter_asset_file( $path, $repo = '', $asset_id = 0, $max_bytes = 0 ) {
+		if ( ! is_string( $path ) ) {
+			$path = '';
+		}
+
+		if ( '' !== $path ) {
+			return $path;
+		}
+
+		$repo     = is_string( $repo ) ? $repo : '';
+		$asset_id = is_numeric( $asset_id ) ? (int) $asset_id : 0;
+
+		if ( '' === $repo || $asset_id <= 0 ) {
+			return $path;
+		}
+
+		$api = $this->services->github_api;
+
+		// Older builds of the GitHub client predate this method; the seam degrades to "unavailable"
+		// rather than fatalling, which is what a consumer's '' check already expects.
+		if ( ! method_exists( $api, 'download_asset_to_file' ) ) {
+			return $path;
+		}
+
+		$file = $api->download_asset_to_file(
+			$repo,
+			$asset_id,
+			60,
+			is_numeric( $max_bytes ) ? (int) $max_bytes : 0
+		);
+
+		return is_string( $file ) ? $file : $path;
+	}
 }

@@ -82,7 +82,8 @@ Renaming any of these is a breaking change — they cross the PHP/JS/DB boundary
 | URI scheme | `edd-release-deploy://owner/repo/release/file.zip` |
 | Settings section | `release_deploy` (Extensions tab); page URL `edit.php?post_type=download&page=edd-settings&tab=extensions&section=release_deploy` |
 | Option / constant | `edd_release_deploy_token` in `edd_settings`; override constant `EDD_RELEASE_DEPLOY_TOKEN` |
-| AJAX action | `edd_release_deploy_test_connection` (cap `manage_shop_settings`) — the only one registered here; the browser's endpoints are registered by its package under the `edd_release_deploy` prefix |
+| AJAX action | `edd_release_deploy_test_connection` (cap `manage_shop_settings`) — the only one registered here; the browser's endpoints are registered by its package under the `edd_release_deploy` prefix, gated on `edit_products` (the Browser `capability` config — the package default is `manage_options`; it used to be `read`, i.e. any customer account) and with no `nopriv` twins |
+| Integrator hook | `edd_release_deploy_asset_file` filter (`'', $repo, $asset_id, $max_bytes` → local temp path or `''`): downloads a release asset's bytes for code that must inspect them. Hooks are the WHOLE contract — no facade function, no service accessor, because the vendored client's class names are Strauss-prefixed per build |
 | Nonces | `edd_release_deploy_nonce`, `edd_release_deploy_metabox`, `edd_release_deploy_version_sync`, `edd_release_deploy_changelog_sync` |
 | EDD field hooks | `edd_release_deploy_edd_token_react`, `edd_release_deploy_edd_upgrade_pro_react` |
 | Script/style handle | `release-deploy-edd`; localized global `window.releaseDeployEDD` |

@@ -5,7 +5,7 @@ Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
 Stable tag: 1.1.0
-license: GPL-3.0-or-later
+License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0
 GitHub Plugin URI: https://github.com/artkrsk/release-deploy-edd/
 

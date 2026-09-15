@@ -124,8 +124,7 @@ class Settings extends Manager {
 			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
 		}
 
-		$raw_token = $_POST['token'] ?? '';
-		$token     = is_string( $raw_token ) ? sanitize_text_field( wp_unslash( $raw_token ) ) : '';
+		$token = isset( $_POST['token'] ) && is_string( $_POST['token'] ) ? sanitize_text_field( wp_unslash( $_POST['token'] ) ) : '';
 
 		/** Test GitHub API connection result @var bool $result */
 		$result = $this->services->github_api->test_connection( $token );

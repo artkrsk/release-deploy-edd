@@ -24,13 +24,13 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ArtsEDDRD\Arts\Utilities\Utilities;
 use Arts\EDD\ReleaseDeploy\Plugin;
 
-$plugin_file    = __FILE__;
-$plugin_version = Utilities::get_plugin_version( $plugin_file );
-
-define( 'ARTS_EDD_RD_PLUGIN_VERSION', $plugin_version );
-define( 'ARTS_EDD_RD_PLUGIN_FILE', $plugin_file );
-define( 'ARTS_EDD_RD_PLUGIN_PATH', untrailingslashit( plugin_dir_path( $plugin_file ) ) );
-define( 'ARTS_EDD_RD_PLUGIN_URL', untrailingslashit( plugin_dir_url( $plugin_file ) ) );
+// Deliberately no top-level $plugin_file/$plugin_version — WordPress includes every active plugin's
+// main file in one shared global scope, and unprefixed top-level variables here can collide with an
+// equally-generic one from another plugin.
+define( 'ARTS_EDD_RD_PLUGIN_VERSION', Utilities::get_plugin_version( __FILE__ ) );
+define( 'ARTS_EDD_RD_PLUGIN_FILE', __FILE__ );
+define( 'ARTS_EDD_RD_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
+define( 'ARTS_EDD_RD_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 /**
  * Deferred to plugins_loaded, not run at top-level file execution: WordPress includes every active

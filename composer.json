@@ -13,12 +13,6 @@
   ],
   "homepage": "https://artemsemkin.com",
   "minimum-stability": "dev",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/artkrsk/github-release-browser.git"
-    }
-  ],
   "prefer-stable": true,
   "plugin": {
     "Plugin Name": "Release Deploy for Easy Digital Downloads",

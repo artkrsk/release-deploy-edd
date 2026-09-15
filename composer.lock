@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b298fbdaef60c63a3b0a9632a5d9920",
+    "content-hash": "4e10b8ec2f31534d091d410949c0d3b5",
     "packages": [
         {
             "name": "arts/base",
@@ -91,52 +91,14 @@
                     "Arts\\GH\\ReleaseBrowser\\": "src/php/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Arts\\GH\\ReleaseBrowser\\Tests\\": "tests/php/"
-                }
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "post-update-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "check": [
-                    "@phpcs",
-                    "@phpstan",
-                    "@test"
-                ],
-                "fix": [
-                    "@phpcbf"
-                ],
-                "phpcbf": [
-                    "vendor/bin/phpcbf --standard=.phpstan/phpcs.xml"
-                ],
-                "phpcs": [
-                    "vendor/bin/phpcs --standard=.phpstan/phpcs.xml"
-                ],
-                "phpstan": [
-                    "vendor/bin/phpstan analyse --memory-limit=1G --no-progress"
-                ],
-                "phpstan:baseline": [
-                    "phpstan analyse --memory-limit=1G --generate-baseline"
-                ],
-                "test": [
-                    "vendor/bin/phpunit"
-                ],
-                "test:coverage": [
-                    "vendor/bin/phpunit --coverage-html coverage/php"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
             "description": "Reusable GitHub release browser with PHP backend & React frontend",
             "support": {
-                "source": "https://github.com/artkrsk/github-release-browser/tree/v1.1.0",
-                "issues": "https://github.com/artkrsk/github-release-browser/issues"
+                "issues": "https://github.com/artkrsk/github-release-browser/issues",
+                "source": "https://github.com/artkrsk/github-release-browser/tree/v1.1.0"
             },
             "time": "2026-09-15T11:39:12+00:00"
         },

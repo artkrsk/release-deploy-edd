@@ -57,16 +57,16 @@
         },
         {
             "name": "arts/github-release-browser",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/github-release-browser.git",
-                "reference": "2d9f583f64f2c1a4e480a766f9f5371ea384ed2e"
+                "reference": "c7311098afed125e786a8f7821c47c7f885398ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/2d9f583f64f2c1a4e480a766f9f5371ea384ed2e",
-                "reference": "2d9f583f64f2c1a4e480a766f9f5371ea384ed2e",
+                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/c7311098afed125e786a8f7821c47c7f885398ed",
+                "reference": "c7311098afed125e786a8f7821c47c7f885398ed",
                 "shasum": ""
             },
             "require": {
@@ -98,9 +98,9 @@
             "description": "Reusable GitHub release browser with PHP backend & React frontend",
             "support": {
                 "issues": "https://github.com/artkrsk/github-release-browser/issues",
-                "source": "https://github.com/artkrsk/github-release-browser/tree/v1.1.0"
+                "source": "https://github.com/artkrsk/github-release-browser/tree/v1.1.1"
             },
-            "time": "2026-09-15T11:39:12+00:00"
+            "time": "2026-09-15T14:00:37+00:00"
         },
         {
             "name": "arts/utilities",

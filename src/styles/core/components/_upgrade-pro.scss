@@ -41,6 +41,18 @@
     margin-bottom: 15px;
   }
 
+  &__subtitle {
+    color: var(--edd-gh-text-body);
+    margin-bottom: 15px;
+  }
+
+  // Lead-in label for the feature list below, so it sits tight against it.
+  &__unlock {
+    color: var(--edd-gh-text-primary);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
   &__features {
     list-style: disc;
     margin-left: 20px;

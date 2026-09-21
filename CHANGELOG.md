@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+* fixed: the GitHub release browser rendered unstyled in the admin - a stray byte-order mark in the built stylesheet made browsers drop its color variables.
+
 ## 1.1.0
 
 * added: edd_release_deploy_asset_file filter downloads a release asset's bytes to a local file for inspection.

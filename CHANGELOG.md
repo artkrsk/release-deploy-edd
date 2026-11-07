@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2 – November 7, 2026
+
+* fixed: a download with no update file selected in Software Licensing went out as a raw edd-release-deploy:// link instead of the GitHub file, because Licensing serves its first file row through a path the plugin did not recognise.
+* fixed: the file status in the download editor showed Ready even when GitHub would not serve the file. It now checks that a download link can actually be fetched.
+* fixed: the token field reported GitHub's anonymous 60 API calls per hour for a valid token. The rate limit was checked against the saved token rather than the one being validated, so a freshly entered token showed the unauthenticated limit, cached for a minute past saving.
+
 ## 1.1.1 – September 21, 2026
 
 * fixed: the GitHub release browser rendered unstyled in the admin - a stray byte-order mark in the built stylesheet made browsers drop its color variables.

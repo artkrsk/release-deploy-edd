@@ -16,24 +16,22 @@ class Downloads extends Manager {
 	/**
 	 * Intercept download and serve from GitHub if configured
 	 *
-	 * @param string                   $file Current file path.
-	 * @param array<int|string, mixed> $download_files All files for this download.
-	 * @param int|string               $file_key Index of file being requested.
+	 * Resolves `$file` itself, never `$download_files[ $file_key ]`: when a download has no
+	 * `_edd_sl_upgrade_file_key`, EDD SL serves its first row by `array_shift`ing it out of
+	 * `$download_files` and still passes the empty key, so a key lookup misses.
+	 *
+	 * @param string                   $file The file EDD or EDD SL is about to serve.
+	 * @param array<int|string, mixed> $download_files All files for this download (unused, kept for hook arity).
+	 * @param int|string               $file_key Index of file being requested (unused, kept for hook arity).
 	 * @param array<string, mixed>     $args Download arguments (optional for EDD SL compatibility).
 	 * @return string File path or S3 URL
 	 */
 	public function maybe_serve_from_github( $file, $download_files, $file_key, $args = array() ) {
-		$entry = $download_files[ $file_key ] ?? null;
-
-		if ( ! is_array( $entry ) || ! isset( $entry['file'] ) || ! is_string( $entry['file'] ) ) {
+		if ( ! is_string( $file ) || ! $this->services->uri_parser->is_github_file( $file ) ) {
 			return $file;
 		}
 
-		$file_path = $entry['file'];
-
-		if ( ! $this->services->uri_parser->is_github_file( $file_path ) ) {
-			return $file;
-		}
+		$file_path = $file;
 
 		// Absent when EDD Software Licensing applies this filter: it passes only
 		// three arguments, so $args defaults to an empty array on that path.

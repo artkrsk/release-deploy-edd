@@ -13,7 +13,7 @@ importers:
         version: https://codeload.github.com/artkrsk/github-release-browser/tar.gz/72aef1a6e4ab50ef021fce9602c1f3c22cccd2b9(@wordpress/components@30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(supports-color@10.2.2))(@wordpress/element@6.46.0)(@wordpress/i18n@6.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@arts/release-deploy-core':
         specifier: github:artkrsk/arts-release-deploy-core
-        version: https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/cf96057b539a08d7ea5c83c0e1db23b25fcd86c2(@wordpress/api-fetch@7.53.0)(@wordpress/element@6.46.0)(@wordpress/i18n@6.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/f777d075ca1a5cade3694aa78e0369a16f574860(@wordpress/api-fetch@7.53.0)(@wordpress/element@6.46.0)(@wordpress/i18n@6.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@wordpress/api-fetch':
         specifier: ^7.34.0
         version: 7.53.0
@@ -132,9 +132,9 @@ packages:
       react: ^18.0.0
       react-dom: ^18.0.0
 
-  '@arts/release-deploy-core@https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/cf96057b539a08d7ea5c83c0e1db23b25fcd86c2':
-    resolution: {gitHosted: true, integrity: sha512-fhCbrqU/KsDyFBqcz8YXhI1OUhqBO0yWfDSF90UdBgPFEcCdrlaNOIujkkkTe56LsFS4LOaZIqHO/iOAgnZSYA==, tarball: https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/cf96057b539a08d7ea5c83c0e1db23b25fcd86c2}
-    version: 1.2.0
+  '@arts/release-deploy-core@https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/f777d075ca1a5cade3694aa78e0369a16f574860':
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/f777d075ca1a5cade3694aa78e0369a16f574860}
+    version: 1.2.1
     engines: {node: '>=23.0.0'}
     peerDependencies:
       '@wordpress/api-fetch': ^7.34.0
@@ -2996,7 +2996,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@arts/release-deploy-core@https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/cf96057b539a08d7ea5c83c0e1db23b25fcd86c2(@wordpress/api-fetch@7.53.0)(@wordpress/element@6.46.0)(@wordpress/i18n@6.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@arts/release-deploy-core@https://codeload.github.com/artkrsk/arts-release-deploy-core/tar.gz/f777d075ca1a5cade3694aa78e0369a16f574860(@wordpress/api-fetch@7.53.0)(@wordpress/element@6.46.0)(@wordpress/i18n@6.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@wordpress/api-fetch': 7.53.0
       '@wordpress/element': 6.46.0

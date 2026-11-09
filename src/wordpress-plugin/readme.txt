@@ -4,7 +4,7 @@ Tags:               easy-digital-downloads, github, workflow, webhook, automatio
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0
 GitHub Plugin URI: https://github.com/artkrsk/release-deploy-edd/
@@ -142,7 +142,7 @@ Initial public release.
 
 == Changelog ==
 
-= 1.1.3 =
+= 1.1.3 – November 9, 2026 =
 * fixed: downloads served from GitHub failed with an HTTP 500 on LiteSpeed 1.9 and newer servers. EDD Software Licensing sends an empty Content-Length header for files it can't measure, which those servers reject; the plugin now drops that empty header.
 
 = 1.1.2 – November 7, 2026 =

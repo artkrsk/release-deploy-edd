@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3 – November 9, 2026
+
+* fixed: downloads served from GitHub failed with an HTTP 500 on LiteSpeed 1.9 and newer servers. EDD Software Licensing sends an empty Content-Length header for files it can't measure, which those servers reject; the plugin now drops that empty header.
+
 ## 1.1.2 – November 7, 2026
 
 * fixed: a download with no update file selected in Software Licensing went out as a raw edd-release-deploy:// link instead of the GitHub file, because Licensing serves its first file row through a path the plugin did not recognise.

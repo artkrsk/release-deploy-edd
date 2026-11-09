@@ -41,7 +41,37 @@ class Downloads extends Manager {
 		// Try to resolve GitHub URL, fallback to original file on any error
 		$github_url = $this->resolve_github_url( $file_path, $payment_id, $download_id );
 
+		if ( $github_url ) {
+			// EDD SL sends `Content-Length: ` + filesize() of the URL, which is false for a remote
+			// file, so the header goes out empty. LiteSpeed 1.9+ rejects that response with a 500.
+			self::drop_empty_content_length_on_send();
+		}
+
 		return $github_url ? $github_url : $file;
+	}
+
+	/**
+	 * Remove an empty Content-Length header right before headers are sent. A valid one is kept.
+	 */
+	private static function drop_empty_content_length_on_send(): void {
+		static $registered = false;
+
+		if ( $registered ) {
+			return;
+		}
+
+		$registered = true;
+
+		header_register_callback(
+			static function (): void {
+				foreach ( headers_list() as $header ) {
+					if ( preg_match( '/^Content-Length:\s*$/i', $header ) ) {
+						header_remove( 'Content-Length' );
+						return;
+					}
+				}
+			}
+		);
 	}
 
 	/**

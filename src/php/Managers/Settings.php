@@ -126,7 +126,6 @@ class Settings extends Manager {
 
 		$token = isset( $_POST['token'] ) && is_string( $_POST['token'] ) ? sanitize_text_field( wp_unslash( $_POST['token'] ) ) : '';
 
-		/** Test GitHub API connection result @var bool $result */
 		$result = $this->services->github_api->test_connection( $token );
 
 		if ( $result === true ) {

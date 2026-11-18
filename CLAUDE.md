@@ -68,7 +68,9 @@ vendor/bin/phpstan analyse --memory-limit=1G && vendor/bin/phpcs
   that path is baked into the `wp_enqueue_*` calls in `Frontend`.
 - **`edd_requested_file` arrives with 4 args from EDD core but only 3 from EDD Software
   Licensing**, so `$args` (payment/download context) is empty on the SL path — hence the default.
-- **`get_download_url()` signals failure with an empty string, not a `WP_Error`.**
+- **`github_api` methods return their value or a `WP_Error`** (`arts/github-release-browser` 2.x):
+  check `is_wp_error()`, never emptiness — a `WP_Error` is truthy. The `edd_release_deploy_asset_file`
+  filter still answers `''` on failure.
 - The `"latest"` release keyword is Pro-only: `Downloads::resolve_release()` returns `null` for it.
 - wp.org compliance: readme.txt is capped at **5 tags** (`easy-digital-downloads, github,
   workflow, webhook, automation`); Plugin Checker must pass with 0 errors.

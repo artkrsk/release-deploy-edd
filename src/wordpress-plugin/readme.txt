@@ -4,7 +4,7 @@ Tags:               easy-digital-downloads, github, workflow, webhook, automatio
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0
 GitHub Plugin URI: https://github.com/artkrsk/release-deploy-edd/
@@ -142,7 +142,7 @@ Initial public release.
 
 == Changelog ==
 
-= 1.1.4 =
+= 1.1.4 – November 18, 2026 =
 * improved: the GitHub file browser says why a repository's releases could not be loaded (an invalid token, the API rate limit, a network failure) instead of reporting that it has none.
 * fixed: the edd_release_deploy_asset_file filter returned a truncated file when the asset was larger than the requested max_bytes; it now returns an empty string.
 

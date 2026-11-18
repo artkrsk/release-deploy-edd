@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.4 – November 18, 2026
+
+* improved: the GitHub file browser says why a repository's releases could not be loaded (an invalid token, the API rate limit, a network failure) instead of reporting that it has none.
+* fixed: the edd_release_deploy_asset_file filter returned a truncated file when the asset was larger than the requested max_bytes; it now returns an empty string.
+
 ## 1.1.3 – November 9, 2026
 
 * fixed: downloads served from GitHub failed with an HTTP 500 on LiteSpeed 1.9 and newer servers. EDD Software Licensing sends an empty Content-Length header for files it can't measure, which those servers reject; the plugin now drops that empty header.

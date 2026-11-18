@@ -101,15 +101,9 @@ class Downloads extends Manager {
 			return null;
 		}
 
-		// Get download URL — the API contract signals failure with an empty
-		// string, not a WP_Error (the old is_wp_error() check here was dead).
 		$s3_url = $this->services->github_api->get_download_url( $parsed['repo'], (int) $asset['id'] );
 
-		if ( '' === $s3_url ) {
-			return null;
-		}
-
-		return $s3_url;
+		return is_wp_error( $s3_url ) ? null : $s3_url;
 	}
 
 	/**
@@ -122,7 +116,9 @@ class Downloads extends Manager {
 	private function resolve_release( $repo, $release ) {
 		// Lite version only supports specific release tags (not "latest" keyword - that's Pro)
 		if ( $release !== 'latest' ) {
-			return $this->services->github_api->get_release_by_tag( $repo, $release );
+			$data = $this->services->github_api->get_release_by_tag( $repo, $release );
+
+			return is_wp_error( $data ) ? null : $data;
 		}
 
 		// "latest" keyword requires Pro version
@@ -161,21 +157,13 @@ class Downloads extends Manager {
 			return $path;
 		}
 
-		$api = $this->services->github_api;
-
-		// Older builds of the GitHub client predate this method; the seam degrades to "unavailable"
-		// rather than fatalling, which is what a consumer's '' check already expects.
-		if ( ! method_exists( $api, 'download_asset_to_file' ) ) {
-			return $path;
-		}
-
-		$file = $api->download_asset_to_file(
+		$file = $this->services->github_api->download_asset_to_file(
 			$repo,
 			$asset_id,
 			60,
 			is_numeric( $max_bytes ) ? (int) $max_bytes : 0
 		);
 
-		return is_string( $file ) ? $file : $path;
+		return is_wp_error( $file ) ? $path : $file;
 	}
 }

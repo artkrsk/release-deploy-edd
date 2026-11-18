@@ -37,8 +37,9 @@ if ( class_exists( '\Arts\EDD\ReleaseDeploy\Plugin' ) ) {
 ```
 
 Registered on this tier: `github_api`, `uri_parser`, `asset_resolver`. Treat every member as untyped —
-call methods, never `instanceof` or type-hint against the class you get back. The filter above exists
-precisely so you don't need this; prefer it.
+call methods, never `instanceof` or type-hint against the class you get back. A `github_api` call
+returns its value or a `\WP_Error` on failure: check `is_wp_error()`, not emptiness. The filter above
+exists precisely so you don't need this; prefer it.
 
 ## What stays out
 

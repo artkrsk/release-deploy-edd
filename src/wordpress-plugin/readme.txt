@@ -142,6 +142,9 @@ Initial public release.
 
 == Changelog ==
 
+= 1.1.5 =
+* improved: tested with WordPress 7.2.
+
 = 1.1.4 – November 18, 2026 =
 * improved: the GitHub file browser says why a repository's releases could not be loaded (an invalid token, the API rate limit, a network failure) instead of reporting that it has none.
 * fixed: the edd_release_deploy_asset_file filter returned a truncated file when the asset was larger than the requested max_bytes; it now returns an empty string.

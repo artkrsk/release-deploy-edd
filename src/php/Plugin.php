@@ -183,14 +183,17 @@ class Plugin extends BasePlugin {
 	protected function init_package_browser(): void {
 		$this->package_browser = new Browser(
 			array(
-				'cache_prefix'  => 'edd_release_deploy_',
+				'cache_prefix'    => 'edd_release_deploy_',
 				// EDD's own "manage downloads" capability, not the package's manage_options default:
 				// shop managers author download files and must reach the browser, site admins aside.
-				'capability'    => 'edit_products',
-				'github_token'  => $this->get_github_token(),
-				'protocol'      => 'edd-release-deploy://',
-				'action_prefix' => 'edd_release_deploy',
-				'settings_url'  => $this->get_settings_url(),
+				'capability'      => 'edit_products',
+				'github_token'    => $this->get_github_token(),
+				// A download resolves a release while the customer waits, in up to two calls; a
+				// slow GitHub answer should fail into the retryable 503, not hold the worker 30 s each.
+				'request_timeout' => 10,
+				'protocol'        => 'edd-release-deploy://',
+				'action_prefix'   => 'edd_release_deploy',
+				'settings_url'    => $this->get_settings_url(),
 			)
 		);
 

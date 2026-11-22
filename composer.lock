@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fc981e7e6e5c89010c63e5aabcc23b1",
+    "content-hash": "3d5d170ea8be3c29672bdb98808b2545",
     "packages": [
         {
             "name": "arts/base",
@@ -57,16 +57,16 @@
         },
         {
             "name": "arts/github-release-browser",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/github-release-browser.git",
-                "reference": "7900d6704b7083e6207c65c61e5631355af6a201"
+                "reference": "b0ec7df4a889f7e5e9e224d52428141c55ca9fff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/7900d6704b7083e6207c65c61e5631355af6a201",
-                "reference": "7900d6704b7083e6207c65c61e5631355af6a201",
+                "url": "https://api.github.com/repos/artkrsk/github-release-browser/zipball/b0ec7df4a889f7e5e9e224d52428141c55ca9fff",
+                "reference": "b0ec7df4a889f7e5e9e224d52428141c55ca9fff",
                 "shasum": ""
             },
             "require": {
@@ -98,9 +98,10 @@
             "description": "Reusable GitHub release browser with PHP backend & React frontend",
             "support": {
                 "issues": "https://github.com/artkrsk/github-release-browser/issues",
-                "source": "https://github.com/artkrsk/github-release-browser/tree/v2.0.0"
+                "source": "https://github.com/artkrsk/github-release-browser/tree/v2.1.0"
             },
-            "time": "2026-11-18T13:39:35+00:00"
+            "time": "2026-11-22T22:29:25+00:00",
+            "published-time": "2026-11-22T22:30:44+00:00"
         },
         {
             "name": "arts/utilities",
@@ -5134,5 +5135,5 @@
         "php": ">=8.0"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }

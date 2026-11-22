@@ -32,7 +32,7 @@
     "php": ">=8.0",
     "arts/base": "@dev",
     "arts/utilities": "@dev",
-    "arts/github-release-browser": "^2.0"
+    "arts/github-release-browser": "^2.1"
   },
   "require-dev": {
     "arts/easy-digital-downloads-stubs": "^3.7",

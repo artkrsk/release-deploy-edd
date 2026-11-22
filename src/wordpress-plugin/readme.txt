@@ -144,6 +144,9 @@ Initial public release.
 
 = 1.1.5 =
 * improved: tested with WordPress 7.2.
+* improved: requests to GitHub now give up after 10 seconds instead of 30, so a slow GitHub response no longer keeps a customer waiting as long.
+* fixed: a download that could not be fetched from GitHub now shows a short "temporarily unavailable" message that browsers can retry, instead of a server error.
+* fixed: licensed updates served through EDD Software Licensing failed with a server error for downloads hosted on GitHub.
 
 = 1.1.4 – November 18, 2026 =
 * improved: the GitHub file browser says why a repository's releases could not be loaded (an invalid token, the API rate limit, a network failure) instead of reporting that it has none.

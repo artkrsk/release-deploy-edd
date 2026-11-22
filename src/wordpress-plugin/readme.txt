@@ -2,9 +2,9 @@
 Contributors:       artemsemkin
 Tags:               easy-digital-downloads, github, workflow, webhook, automation
 Requires at least: 6.0
-Tested up to: 7.1
+Tested up to: 7.2
 Requires PHP: 8.0
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0
 GitHub Plugin URI: https://github.com/artkrsk/release-deploy-edd/
@@ -142,7 +142,7 @@ Initial public release.
 
 == Changelog ==
 
-= 1.1.5 =
+= 1.1.5 – November 22, 2026 =
 * improved: tested with WordPress 7.2.
 * improved: requests to GitHub now give up after 10 seconds instead of 30, so a slow GitHub response no longer keeps a customer waiting as long.
 * fixed: a download that could not be fetched from GitHub now shows a short "temporarily unavailable" message that browsers can retry, instead of a server error.

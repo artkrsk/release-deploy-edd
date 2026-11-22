@@ -20,10 +20,13 @@ class Downloads extends Manager {
 	 * `_edd_sl_upgrade_file_key`, EDD SL serves its first row by `array_shift`ing it out of
 	 * `$download_files` and still passes the empty key, so a key lookup misses.
 	 *
+	 * A GitHub file that can't be resolved ends the request with a 503. Handing the raw URI back
+	 * would make EDD and EDD SL treat it as a path, which fails with a bare 500 or a 501.
+	 *
 	 * @param string                   $file The file EDD or EDD SL is about to serve.
 	 * @param array<int|string, mixed> $download_files All files for this download (unused, kept for hook arity).
 	 * @param int|string               $file_key Index of file being requested (unused, kept for hook arity).
-	 * @param array<string, mixed>     $args Download arguments (optional for EDD SL compatibility).
+	 * @param array<string, mixed>     $args Download arguments (unused, kept for hook arity; EDD SL passes none).
 	 * @return string File path or S3 URL
 	 */
 	public function maybe_serve_from_github( $file, $download_files, $file_key, $args = array() ) {
@@ -31,23 +34,37 @@ class Downloads extends Manager {
 			return $file;
 		}
 
-		$file_path = $file;
+		$github_url = $this->resolve_github_url( $file );
 
-		// Absent when EDD Software Licensing applies this filter: it passes only
-		// three arguments, so $args defaults to an empty array on that path.
-		$payment_id  = isset( $args['payment_id'] ) && is_numeric( $args['payment_id'] ) ? (int) $args['payment_id'] : null;
-		$download_id = isset( $args['download_id'] ) && is_numeric( $args['download_id'] ) ? (int) $args['download_id'] : null;
+		if ( is_wp_error( $github_url ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Lets a failed delivery be traced from the server alone.
+			error_log( sprintf( 'Release Deploy for EDD: download of %s failed: [%s] %s', $file, $github_url->get_error_code(), $github_url->get_error_message() ) );
 
-		// Try to resolve GitHub URL, fallback to original file on any error
-		$github_url = $this->resolve_github_url( $file_path, $payment_id, $download_id );
-
-		if ( $github_url ) {
-			// EDD SL sends `Content-Length: ` + filesize() of the URL, which is false for a remote
-			// file, so the header goes out empty. LiteSpeed 1.9+ rejects that response with a 500.
-			self::drop_empty_content_length_on_send();
+			self::die_unavailable();
 		}
 
-		return $github_url ? $github_url : $file;
+		// EDD SL sends `Content-Length: ` + filesize() of the URL, which is false for a remote
+		// file, so the header goes out empty. LiteSpeed 1.9+ rejects that response with a 500.
+		self::drop_empty_content_length_on_send();
+
+		return $github_url;
+	}
+
+	/**
+	 * End the request with a retryable 503 that a customer can read.
+	 *
+	 * @return never
+	 */
+	private static function die_unavailable() {
+		if ( ! headers_sent() ) {
+			header( 'Retry-After: 120' );
+		}
+
+		wp_die(
+			esc_html__( 'This download is temporarily unavailable. Please try again in a few minutes.', 'release-deploy-edd' ),
+			esc_html__( 'Download unavailable', 'release-deploy-edd' ),
+			array( 'response' => 503 )
+		);
 	}
 
 	/**
@@ -77,33 +94,39 @@ class Downloads extends Manager {
 	/**
 	 * Resolve GitHub URI to S3 download URL
 	 *
-	 * @param string   $file_path GitHub URI.
-	 * @param int|null $payment_id Optional payment ID for notification context.
-	 * @param int|null $download_id Optional download ID for notification context.
-	 * @return string|null S3 URL or null on error
+	 * @param string $file_path GitHub URI.
+	 * @return string|\WP_Error S3 URL, or why it couldn't be resolved
 	 */
-	private function resolve_github_url( $file_path, $payment_id = null, $download_id = null ) {
+	private function resolve_github_url( $file_path ) {
 		$parsed = $this->services->uri_parser->parse( $file_path );
 
-		if ( is_wp_error( $parsed ) || empty( $parsed['valid'] ) || ! isset( $parsed['repo'], $parsed['release'] ) ) {
-			return null;
+		if ( is_wp_error( $parsed ) ) {
+			return $parsed;
+		}
+
+		if ( empty( $parsed['valid'] ) || ! isset( $parsed['repo'], $parsed['release'] ) ) {
+			return new \WP_Error( 'invalid_uri', 'Invalid GitHub URI' );
 		}
 
 		$release = $this->resolve_release( $parsed['repo'], $parsed['release'] );
 
-		if ( ! $release ) {
-			return null;
+		if ( is_wp_error( $release ) ) {
+			return new \WP_Error( $release->get_error_code(), 'Release lookup failed: ' . $release->get_error_message() );
 		}
 
 		$asset = $this->services->asset_resolver->find_asset_in_release( $release, $parsed['asset'] ?? null );
 
 		if ( ! $asset || empty( $asset['id'] ) || ! is_numeric( $asset['id'] ) ) {
-			return null;
+			return new \WP_Error( 'asset_not_found', 'Asset not found in release' );
 		}
 
 		$s3_url = $this->services->github_api->get_download_url( $parsed['repo'], (int) $asset['id'] );
 
-		return is_wp_error( $s3_url ) ? null : $s3_url;
+		if ( is_wp_error( $s3_url ) ) {
+			return new \WP_Error( $s3_url->get_error_code(), 'Download URL request failed: ' . $s3_url->get_error_message() );
+		}
+
+		return $s3_url;
 	}
 
 	/**
@@ -111,18 +134,15 @@ class Downloads extends Manager {
 	 *
 	 * @param string $repo Repository in owner/name form.
 	 * @param string $release Release tag from the parsed URI.
-	 * @return array<string, mixed>|null Release data or null
+	 * @return array<string, mixed>|\WP_Error Release data, or the GitHub error
 	 */
 	private function resolve_release( $repo, $release ) {
 		// Lite version only supports specific release tags (not "latest" keyword - that's Pro)
 		if ( $release !== 'latest' ) {
-			$data = $this->services->github_api->get_release_by_tag( $repo, $release );
-
-			return is_wp_error( $data ) ? null : $data;
+			return $this->services->github_api->get_release_by_tag( $repo, $release );
 		}
 
-		// "latest" keyword requires Pro version
-		return null;
+		return new \WP_Error( 'latest_requires_pro', 'The "latest" release keyword requires Release Deploy Pro' );
 	}
 	/**
 	 * Answer `edd_release_deploy_asset_file` — download a release asset and hand back a local path.

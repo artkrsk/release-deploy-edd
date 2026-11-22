@@ -63,6 +63,17 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
+	 * Run before EDD SL's package download, which is served from `init` at 10. Lite boots on
+	 * plugins_loaded after SL has hooked in, so at the same priority SL would deliver the raw
+	 * `edd-release-deploy://` URI before `edd_requested_file` has a callback.
+	 *
+	 * @return int
+	 */
+	protected function get_run_action_priority(): int {
+		return 5;
+	}
+
+	/**
 	 * Get core services classes
 	 *
 	 * @return array<string, class-string> Service name => class mappings (empty - using package services)
